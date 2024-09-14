@@ -1,9 +1,6 @@
 package com.jciterceros.vr_online_backend.model;
 
-import com.jciterceros.vr_online_backend.model.enums.SituacaoCPF;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +20,4 @@ public class PessoaFisica extends Pessoa {
     private String rg;
     private Date dataNascimento;
     private String nomeSocial;
-
-    @Enumerated(EnumType.STRING)
-    private SituacaoCPF situacaoCadastral;
 }

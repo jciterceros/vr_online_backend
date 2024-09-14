@@ -199,13 +199,12 @@ package "Pessoa e Contatos" {
         CANCELADO
         NULO
     }
-    
+
     class PessoaFisica {
         - cpf: String
         - rg: String
         - dataNascimento: Date
         - nomeSocial: String
-        - situacaoCadastral: SituacaoCPF
         + getCpf(): String
         + getRg(): String
         + getDataNascimento(): Date
@@ -215,7 +214,6 @@ package "Pessoa e Contatos" {
         + setRg(rg: String)
         + setDataNascimento(dataNascimento: Date)
         + setNomeSocial(nomeSocial: String)
-        + setSituacaoCadastral(situacaoCadastral: SituacaoCPF)
     }
 
     enum SituacaoCNPJ {

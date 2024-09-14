@@ -11,10 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "pessoa_juridica")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class PessoaJuridica extends Pessoa {
     private String cnpj;

@@ -26,4 +26,8 @@ public class Endereco implements IEndereco{
     @ManyToOne
     @JoinColumn(name = "municipio_id")
     private Municipio municipio;
+
+    @ManyToOne
+    @JoinColumn(name = "contato_service_id")
+    private ContatoService contatoService;
 }

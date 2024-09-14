@@ -21,4 +21,8 @@ public class Telefone {
     private String celular;
     private String comercial;
     private String principal;
+
+    @ManyToOne
+    @JoinColumn(name = "contato_service_id")
+    private ContatoService contatoService;
 }

@@ -10,10 +10,8 @@ import lombok.Setter;
 import java.util.Date;
 
 @Entity
-@Table(name = "pessoa_fisica")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 public class PessoaFisica extends Pessoa {
     private String cpf;

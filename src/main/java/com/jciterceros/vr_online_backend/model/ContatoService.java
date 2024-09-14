@@ -27,6 +27,10 @@ public class ContatoService {
     @JoinColumn(name = "contato_service_id")
     private List<Telefone> telefones;
 
+    @OneToOne
+    @JoinColumn(name = "pessoa_id")
+    private Pessoa pessoa;
+
     public void adicionarEndereco(Endereco endereco) {
         enderecos.add(endereco);
     }

@@ -1,6 +1,6 @@
 package com.jciterceros.vr_online_backend.domain.endereco.models;
 
-import com.jciterceros.vr_online_backend.domain.pessoa.services.ContatoService;
+import com.jciterceros.vr_online_backend.domain.pessoa.models.ContatoService;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

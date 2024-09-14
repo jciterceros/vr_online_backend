@@ -7,19 +7,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "municipio")
+@Table(name = "endereco")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Municipio {
+public class Endereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String descricao;
+    private String rua;
+    private Integer numero;
+    private String complemento;
+    private String cep;
+    private String bairro;
 
     @ManyToOne
-    @JoinColumn(name = "estado_id")
-    private Estado estado;
+    @JoinColumn(name = "municipio_id")
+    private Municipio municipio;
 }

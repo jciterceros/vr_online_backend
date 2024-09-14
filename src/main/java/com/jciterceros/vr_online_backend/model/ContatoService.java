@@ -6,20 +6,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
-@Table(name = "municipio")
+@Table(name = "local_armazenamento")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Municipio {
+public class ContatoService {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String descricao;
+    @OneToMany
+    @JoinColumn(name = "contato_service_id")
+    private List<Endereco> enderecos;
 
-    @ManyToOne
-    @JoinColumn(name = "estado_id")
-    private Estado estado;
+    @OneToMany
+    @JoinColumn(name = "contato_service_id")
+    private List<Telefone> telefones;
 }

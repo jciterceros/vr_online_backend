@@ -164,13 +164,6 @@ package "Pessoa e Contatos" {
         ADMINISTRADOR
     }
 
-    enum SituacaoCPF {
-        REGULAR
-        PENDENTE
-        SUSPENSO
-        CANCELADO
-        NULO
-    }
 
     class PessoaFactory {
         ' + createPessoaFisica(cpf: String, rg: String, dataNascimento: Date, nomeSocial: String): PessoaFisica
@@ -199,19 +192,30 @@ package "Pessoa e Contatos" {
         + setSituacao(situacao: SituacaoCPF)
     }
 
+    enum SituacaoCPF {
+        REGULAR
+        PENDENTE
+        SUSPENSO
+        CANCELADO
+        NULO
+    }
+    
     class PessoaFisica {
         - cpf: String
         - rg: String
         - dataNascimento: Date
         - nomeSocial: String
+        - situacaoCadastral: SituacaoCPF
         + getCpf(): String
         + getRg(): String
         + getDataNascimento(): Date
         + getNomeSocial(): String
+        + getSituacaoCadastral(): SituacaoCPF
         + setCpf(cpf: String)
         + setRg(rg: String)
         + setDataNascimento(dataNascimento: Date)
         + setNomeSocial(nomeSocial: String)
+        + setSituacaoCadastral(situacaoCadastral: SituacaoCPF)
     }
 
     enum SituacaoCNPJ {

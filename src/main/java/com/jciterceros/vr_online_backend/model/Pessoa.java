@@ -1,18 +1,33 @@
 package com.jciterceros.vr_online_backend.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.jciterceros.vr_online_backend.model.enums.SituacaoCPF;
+import com.jciterceros.vr_online_backend.model.enums.TipoPessoa;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import java.util.UUID;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
+@Entity
+@Table(name = "pessoa")
+@Getter
+@Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public abstract class Pessoa {
-    private UUID id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String nome;
-//    private TipoPessoa tipo;
-//    private ContatoService contatoService;
     private String email;
-//    private SituacaoCPF situacao;
+
+    @Enumerated(EnumType.STRING)
+    private TipoPessoa tipo;
+
+    @Enumerated(EnumType.STRING)
+    private SituacaoCPF situacao;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "pessoa")
+    private ContatoService contatoService;
 }

@@ -1,4 +1,4 @@
-package com.jciterceros.vr_online_backend.dto.custom;
+package com.jciterceros.vr_online_backend.domain.dto.custom;
 
 import java.time.Instant;
 import java.util.ArrayList;

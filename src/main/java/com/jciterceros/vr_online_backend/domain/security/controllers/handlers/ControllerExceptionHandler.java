@@ -1,7 +1,7 @@
 package com.jciterceros.vr_online_backend.domain.security.controllers.handlers;
 
-import com.jciterceros.vr_online_backend.dto.custom.CustomErrorDTO;
-import com.jciterceros.vr_online_backend.dto.custom.ValidationErrorDTO;
+import com.jciterceros.vr_online_backend.domain.dto.custom.CustomErrorDTO;
+import com.jciterceros.vr_online_backend.domain.dto.custom.ValidationErrorDTO;
 import com.jciterceros.vr_online_backend.domain.exception.DatabaseException;
 import com.jciterceros.vr_online_backend.domain.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;

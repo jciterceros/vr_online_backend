@@ -6,17 +6,15 @@ import com.jciterceros.vr_online_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
 @Service
-public class UserServiceImpl implements UserService {
+public class UserDetailsServiceImpl implements UserDetailsService {
     public static final String USER_NOT_FOUND = "User not found";
     public static final String USER_ALREADY_EXISTS = "User already exists";
     UserRepository userRepository;
     private final IPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, IPasswordEncoder passwordEncoder) {
+    public UserDetailsServiceImpl(UserRepository userRepository, IPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }

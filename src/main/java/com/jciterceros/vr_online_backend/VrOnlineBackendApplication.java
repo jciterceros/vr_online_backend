@@ -9,5 +9,4 @@ public class VrOnlineBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(VrOnlineBackendApplication.class, args);
 	}
-
 }

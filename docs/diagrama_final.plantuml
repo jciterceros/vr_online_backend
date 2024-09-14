@@ -1,0 +1,637 @@
+@startuml
+
+' Define a aparência das linhas e caixas
+skinparam class {
+    BackgroundColor #F9F9F9
+    BorderColor #B5B5B5
+    ArrowColor #007ACC
+}
+
+' Define estilos para diferentes tipos de relacionamentos
+skinparam class {
+    ArrowColor #007ACC
+    BackgroundColor #F9F9F9
+    BorderColor #B5B5B5
+}
+
+skinparam class {
+    BackgroundColor #F9F9F9
+    BorderColor #B5B5B5
+}
+
+' Define o estilo das interfaces
+skinparam interface {
+    BackgroundColor #D0E8FF
+    BorderColor #007ACC
+}
+
+' Classes e interfaces relacionadas a Endereço
+package "Endereço" {
+    class Estado {
+        - id: Long
+        - descricao: String
+        - sigla: String
+        + getId(): Integer
+        + getDescricao(): String
+        + getSigla(): String
+        + setDescricao(descricao: String)
+        + setSigla(sigla: String)
+    }
+
+    class Municipio {
+        - id: Long
+        - descricao: String
+        - estado: Estado
+        + getId(): Integer
+        + getDescricao(): String
+        + getEstado(): Estado
+        + setDescricao(descricao: String)
+        + setEstado(estado: Estado)
+    }
+
+    class ViaCep {
+        - cep: String
+        - logradouro: String
+        - complemento: String
+        - bairro: String
+        - localidade: String
+        - uf: String
+        - ibge: String
+        - gia: String
+        - ddd: String
+        - siafi: String
+        + getCep(): String
+        + getLogradouro(): String
+        + getComplemento(): String
+        + getBairro(): String
+        + getLocalidade(): String
+        + getUf(): String
+        + getIbge(): String
+        + getGia(): String
+        + getDdd(): String
+        + getSiafi(): String
+        + setCep(cep: String)
+        + setLogradouro(logradouro: String)
+        + setComplemento(complemento: String)
+        + setBairro(bairro: String)
+        + setLocalidade(localidade: String)
+        + setUf(uf: String)
+        + setIbge(ibge: String)
+        + setGia(gia: String)
+        + setDdd(ddd: String)
+        + setSiafi(siafi: String)
+    }
+
+    interface IEndereco {
+        + getRua(): String
+        + getNumero(): Integer
+        + getComplemento(): String
+        + getCep(): String
+        + getBairro(): String
+        + getMunicipio(): Municipio
+    }
+
+    class EnderecoViaCepAdapter implements IEndereco {
+        - viaCep: ViaCep
+        - numero: Integer
+        + getRua(): String
+        + getNumero(): Integer
+        + getComplemento(): String
+        + getCep(): String
+        + getBairro(): String
+        + getMunicipio(): Municipio
+    }
+
+    class Endereco implements IEndereco {
+        - id: Long
+        - rua: String
+        - numero: Integer
+        - complemento: String
+        - cep: String
+        - bairro: String
+        - municipio: Municipio
+        + getId(): Long
+        + getRua(): String
+        + getNumero(): Integer
+        + getComplemento(): String
+        + getCep(): String
+        + getBairro(): String
+        + getMunicipio(): Municipio
+        + setRua(rua: String)
+        + setNumero(numero: Integer)
+        + setComplemento(complemento: String)
+        + setCep(cep: String)
+        + setBairro(bairro: String)
+        + setMunicipio(municipio: Municipio)
+    }
+}
+
+' Classes e interfaces relacionadas a Pessoa
+package "Pessoa e Contatos" {
+    class Telefone {
+        - id: Long
+        - fixo: String
+        - celular: String
+        - comercial: String
+        - principal: String
+        + getId(): Long
+        + getFixo(): String
+        + getCelular(): String
+        + getComercial(): String
+        + getPrincipal(): String
+        + setFixo(fixo: String)
+        + setCelular(celular: String)
+        + setComercial(comercial: String)
+        + setPrincipal(principal: String)
+    }
+
+    class ContatoService {
+        - enderecos: List<Endereco>
+        - telefones: List<Telefone>
+        + adicionarEndereco(endereco: Endereco)
+        + removerEndereco(endereco: Endereco)
+        + listarEnderecos(): List<Endereco>
+        + adicionarTelefone(telefone: Telefone)
+        + removerTelefone(telefone: Telefone)
+        + listarTelefones(): List<Telefone>
+    }
+
+    enum TipoPessoa {
+        CLIENTE
+        FORNECEDOR
+        REPRESENTANTE
+        FUNCIONARIO
+        ADMINISTRADOR
+    }
+
+    enum SituacaoCPF {
+        REGULAR
+        PENDENTE
+        SUSPENSO
+        CANCELADO
+        NULO
+    }
+
+    class PessoaFactory {
+        ' + createPessoaFisica(cpf: String, rg: String, dataNascimento: Date, nomeSocial: String): PessoaFisica
+        ' + createPessoaJuridica(cnpj: String, inscricaoEstadual: String, inscricaoMunicipal: String, razaoSocial: String, ramoAtividade: String, situacaoCadastral: SituacaoCNPJ): PessoaJuridica
+        + createPessoaFisica(): PessoaFisica
+        + createPessoaJuridica(): PessoaJuridica
+    }
+
+    abstract class Pessoa {
+        - id: Long
+        - nome: String
+        - tipo: TipoPessoa
+        - contatoService: ContatoService
+        - email: String
+        - situacao: SituacaoCPF
+        + getId(): Long
+        + getNome(): String
+        + getTipo(): TipoPessoa
+        + getContatoService(): ContatoService
+        + getEmail(): String
+        + getSituacao(): SituacaoCPF
+        + setId(id: Long)
+        + setNome(nome: String)
+        + setTipo(tipo: TipoPessoa)
+        + setEmail(email: String)
+        + setSituacao(situacao: SituacaoCPF)
+    }
+
+    class PessoaFisica {
+        - cpf: String
+        - rg: String
+        - dataNascimento: Date
+        - nomeSocial: String
+        + getCpf(): String
+        + getRg(): String
+        + getDataNascimento(): Date
+        + getNomeSocial(): String
+        + setCpf(cpf: String)
+        + setRg(rg: String)
+        + setDataNascimento(dataNascimento: Date)
+        + setNomeSocial(nomeSocial: String)
+    }
+
+    enum SituacaoCNPJ {
+        ATIVO
+        SUSPENSA
+        INAPTA
+        BAIXADA
+        NULA
+    }
+
+    class PessoaJuridica {
+        - cnpj: String
+        - inscricaoEstadual: String
+        - inscricaoMunicipal: String
+        - razaoSocial: String
+        - ramoAtividade: String
+        - situacaoCadastral: SituacaoCNPJ
+        + getCnpj(): String
+        + getInscricaoEstadual(): String
+        + getInscricaoMunicipal(): String
+        + getRazaoSocial(): String
+        + getRamoAtividade(): String
+        + getSituacaoCadastral(): SituacaoCNPJ
+        + setCnpj(cnpj: String)
+        + setInscricaoEstadual(inscricaoEstadual: String)
+        + setInscricaoMunicipal(inscricaoMunicipal: String)
+        + setRazaoSocial(razaoSocial: String)
+        + setRamoAtividade(ramoAtividade: String)
+        + setSituacaoCadastral(situacaoCadastral: SituacaoCNPJ)
+    }
+}
+
+' Classes e interfaces relacionadas a Produtos e Estoque
+package "Produtos e Estoque" {
+    enum Metrica {
+        UNIDADE
+        KILOGRAMAS
+        METROS
+        LITROS
+    }
+
+    class Produto {
+        - id: Long
+        - marca: String
+        - modelo: String
+        - descricao: String
+        - metrica: Metrica
+        - valorCusto: Decimal
+        - valorVenda: Decimal
+        + getId(): Long
+        + getMarca(): String
+        + getModelo(): String
+        + getDescricao(): String
+        + getMetrica(): Metrica
+        + getValorCusto(): Decimal
+        + getValorVenda(): Decimal
+        + setMarca(marca: String)
+        + setModelo(modelo: String)
+        + setDescricao(descricao: String)
+        + setMetrica(metrica: Metrica)
+        + setValorCusto(valorCusto: Decimal)
+        + setValorVenda(valorVenda: Decimal)
+    }
+
+    class LocalArmazenamento {
+        - id: Long
+        - nome: String
+        - endereco: Endereco
+        - capacidadeTotal: Decimal
+        - capacidadeDisponivel: Decimal
+        + getId(): Long
+        + getNome(): String
+        + getEndereco(): Endereco
+        + getCapacidadeTotal(): Decimal
+        + getCapacidadeDisponivel(): Decimal
+        + setNome(nome: String)
+        + setEndereco(endereco: Endereco)
+        + setCapacidadeTotal(capacidadeTotal: Decimal)
+        + setCapacidadeDisponivel(capacidadeDisponivel: Decimal)
+    }
+
+    class Estoque {
+        - id: Long
+        - produto: Produto
+        - quantidade: Decimal
+        - tipoMedida: Metrica
+        - localArmazenamento: LocalArmazenamento
+        + getId(): Long
+        + getProduto(): Produto
+        + getQuantidade(): Decimal
+        + getTipoMedida(): Metrica
+        + getLocalArmazenamento(): LocalArmazenamento
+        + setProduto(produto: Produto)
+        + setQuantidade(quantidade: Decimal)
+        + setTipoMedida(tipoMedida: Metrica)
+        + setLocalArmazenamento(localArmazenamento: LocalArmazenamento)
+    }
+}
+' Classes e interfaces relacionadas a Pagamento
+package "Pagamentos" {
+    enum TipoPagamento {
+        PIX
+        BOLETO
+        CARTAO
+        BITCOINS
+    }
+
+    enum StatusPagamento {
+        PENDENTE
+        CONFIRMADO
+        CANCELADO
+    }
+
+    class Pagamento {
+        - id: Long
+        - valor: Decimal
+        - data: Date
+        - status: StatusPagamento
+        - dataConfirmacao: Date
+        - tipoPagamento: TipoPagamento
+        - processar: IPagamentoProcessar
+        - validar: IPagamentoValidar
+        - notificar: IPagamentoNotificar
+        + getId(): Long
+        + getValor(): Decimal
+        + getData(): Date
+        + getStatus(): StatusPagamento
+        + getDataConfirmacao(): Date
+        + getTipoPagamento(): TipoPagamento
+        + setValor(valor: Decimal)
+        + setData(data: Date)
+        + setStatus(status: StatusPagamento)
+        + setDataConfirmacao(dataConfirmacao: Date)
+        + setTipoPagamento(tipoPagamento: TipoPagamento)
+        + setProcessar(processar: IPagamentoProcessar)
+        + setValidar(validar: IPagamentoValidar)
+        + setNotificar(notificar: IPagamentoNotificar)
+        + processar()
+    }
+
+    ' Segregacao de Interfaces para as Estratégias de Pagamento
+    interface IPagamentoProcessar {
+        + processarPagamento(pagamento: Pagamento)
+    }
+
+    interface IPagamentoValidar {
+        + validarPagamento(pagamento: Pagamento): Boolean
+    }
+
+    interface IPagamentoNotificar {
+        + notificarStatus(pagamento: Pagamento)
+    }
+
+    class PagamentoPIX implements IPagamentoProcessar, IPagamentoValidar, IPagamentoNotificar {
+        + processarPagamento(pagamento: Pagamento)
+        + validarPagamento(pagamento: Pagamento): Boolean
+        + notificarStatus(pagamento: Pagamento)
+    }
+
+    class PagamentoBoleto implements IPagamentoProcessar, IPagamentoValidar, IPagamentoNotificar {
+        + processarPagamento(pagamento: Pagamento)
+        + validarPagamento(pagamento: Pagamento): Boolean
+        + notificarStatus(pagamento: Pagamento)
+    }
+
+    class PagamentoCartao implements IPagamentoProcessar, IPagamentoValidar, IPagamentoNotificar {
+        + processarPagamento(pagamento: Pagamento)
+        + validarPagamento(pagamento: Pagamento): Boolean
+        + notificarStatus(pagamento: Pagamento)
+    }
+
+    class PagamentoBitcoins implements IPagamentoProcessar, IPagamentoValidar, IPagamentoNotificar {
+        + processarPagamento(pagamento: Pagamento)
+        + validarPagamento(pagamento: Pagamento): Boolean
+        + notificarStatus(pagamento: Pagamento)
+    }
+}
+
+' Classes e interfaces relacionadas a Pedidos
+package "Pedidos" {
+    class ItemPedido {
+        - id: Long
+        - produto: Produto
+        - quantidade: Decimal
+        - valorAtualProduto: Decimal
+        - dataPedido: Date
+        - subTotal: Decimal
+        + getId(): Long
+        + getProduto(): Produto
+        + getQuantidade(): Decimal
+        + getValorAtualProduto(): Decimal
+        + getDataPedido(): Date
+        + getSubTotal(): Decimal
+        + setProduto(produto: Produto)
+        + setQuantidade(quantidade: Decimal)
+        + setValorAtualProduto(valorAtualProduto: Decimal)
+        + setDataPedido(dataPedido: Date)
+        + setSubTotal(subTotal: Decimal)
+    }
+
+    class PedidoVenda {
+        - id: Long
+        - cliente: Pessoa
+        - cpfNota: String
+        - itens: List<ItemPedido>
+        - valorTotal: Decimal
+        - dataPedido: Date
+        - pagamento: Pagamento
+        - dataEntrega: Date
+        - localEntrega: Endereco
+        + getId(): Long
+        + getCliente(): Pessoa
+        + getCpfNota(): String
+        + getItens(): List<ItemPedido>
+        + getValorTotal(): Decimal
+        + getDataPedido(): Date
+        + getPagamento(): Pagamento
+        + getDataEntrega(): Date
+        + getLocalEntrega(): Endereco
+        + setCliente(cliente: Pessoa)
+        + setCpfNota(cpfNota: String)
+        + setItens(itens: List<ItemPedido>)
+        + setValorTotal(valorTotal: Decimal)
+        + setDataPedido(dataPedido: Date)
+        + setPagamento(pagamento: Pagamento)
+        + setDataEntrega(dataEntrega: Date)
+        + setLocalEntrega(localEntrega: Endereco)
+    }
+
+    class PedidoCompra {
+        - id: Long
+        - comprador: Pessoa
+        - fornecedor: Pessoa
+        - itens: List<ItemPedido>
+        - valorTotal: Decimal
+        - dataPedido: Date
+        - pagamento: Pagamento
+        - dataEntrega: Date
+        - localEntrega: Endereco
+        + getId(): Long
+        + getComprador(): Pessoa
+        + getFornecedor(): Pessoa
+        + getItens(): List<ItemPedido>
+        + getValorTotal(): Decimal
+        + getDataPedido(): Date
+        + getPagamento(): Pagamento
+        + getDataEntrega(): Date
+        + getLocalEntrega(): Endereco
+        + setComprador(comprador: Pessoa)
+        + setFornecedor(fornecedor: Pessoa)
+        + setItens(itens: List<ItemPedido>)
+        + setValorTotal(valorTotal: Decimal)
+        + setDataPedido(dataPedido: Date)
+        + setPagamento(pagamento: Pagamento)
+        + setDataEntrega(dataEntrega: Date)
+        + setLocalEntrega(localEntrega: Endereco)
+    }
+}
+
+' Adicionando componentes de segurança
+package "Segurança" {
+    
+    interface UserDetailsService {
+        createUser(user: User): User
+        updateUser(user: User): User
+        deleteUser(user: User)
+        getUserById(id: Long): User
+        + loadUserByUsername(username: String): UserDetails
+    }
+    
+    class UserPrincipal {
+        - String username
+        - String password
+        - Collection<? extends GrantedAuthority> authorities
+        + create(user: User): UserPrincipal
+        + getUsername(): String
+        + getPassword(): String
+        + getAuthorities(): Collection<? extends GrantedAuthority>
+        + isAccountNonExpired(): Boolean
+        + isAccountNonLocked(): Boolean
+        + isCredentialsNonExpired(): Boolean
+        + isEnabled(): Boolean
+    }
+
+    class User {
+        - Long id
+        - String username
+        - String password
+        - String email
+        - Set<Role> roles
+        + getId(): Long
+        + getUsername(): String
+        + getPassword(): String
+        + getEmail(): String
+        + getRoles(): Set<Role>
+        + setId(id: Long)
+        + setUsername(username: String)
+        + setPassword(password: String)
+        + setEmail(email: String)
+        + setRoles(roles: Set<Role>)
+    }
+
+    class Role {
+        - Long id
+        - String name
+        + getId(): Long
+        + getName(): String
+        + setId(id: Long)
+        + setName(name: String)
+    }
+
+    class UserServiceImpl implements UserDetailsService {
+        - UserRepository userRepository
+        - PasswordEncoder passwordEncoder
+        + createUser(user: User): User
+        + updateUser(user: User): User
+        + deleteUser(user: User)
+        + getUserById(id: Long): User
+    }
+
+    interface UserRepository {
+        + findByUsername(username: String): User
+        + findByUsernameFetchRoles(username: String): User
+        + save(user: User): User
+    }
+    
+    interface IPasswordEncoder {
+        + encode(password: String): String
+        + matches(rawPassword: String, encodedPassword: String): Boolean
+    }
+
+    class BCryptPasswordEncoder implements IPasswordEncoder {
+        + encode(password: String): String
+        + matches(rawPassword: String, encodedPassword: String): Boolean
+    }
+    
+    class CustomBasicAuthenticationFilter extends OncePerRequestFilter {
+        - String final AUTHORIZATION
+        - String final BASIC
+        - UserRepository userRepository
+        - doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain)
+        - setAuthentication(User user)
+        - Authentication createAuthenticationToken(User user)
+        - Boolean checkPassword(String userPassword, String loginPassword)
+        - String decodeBase64(String base64Credentials)
+        - Boolean isBasicAuthentication(HttpServletRequest request)
+        - String getHeader(HttpServletRequest request)
+    }
+
+    abstract class OncePerRequestFilter {
+        + doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain)
+    }
+
+    class WebSecurityConfig {
+        - CustomBasicAuthenticationFilter customBasicAuthenticationFilter
+        + SecurityFilterChain filterChain(HttpSecurity http)
+    }
+
+    class UserController {
+        - UserService userService
+        + createUser(user: User): User
+    }
+
+}
+
+' Relacionamentos
+
+Estado "1" -- "0..*" Municipio: "Tem"
+Municipio "1" -- "0..*" Estado : "Pertence a"
+Endereco "1" --> "0..*" Municipio : "Está localizado em"
+
+EnderecoViaCepAdapter --> ViaCep : "Recebe dados de"
+
+' Adiciona a composição ou agregação onde for necessário
+Pessoa "1" *-- "1" ContatoService : "Gerencia Contatos"
+ContatoService "1" *-- "0..*" Endereco : "Gerencia"
+ContatoService "1" *-- "0..*" Telefone : "Gerencia"
+
+' Atualiza a relação entre Pessoa e ContatoService para composição
+Pessoa "1" *-- "0..*" Endereco : "Tem"
+Pessoa "1" *-- "0..*" Telefone : "Tem"
+
+' Atualiza a herança para refletir a abstração de Pessoa
+
+PessoaFactory ..> PessoaFisica : "Cria"
+PessoaFactory ..> PessoaJuridica : "Cria"
+Pessoa ..|> PessoaFisica : "Herda"
+Pessoa ..|> PessoaJuridica : "Herda"
+
+Produto "1" -- "0..*" Estoque : "Possui"
+Estoque "1" -- "1" LocalArmazenamento : "Armazenado em"
+
+ItemPedido "1" -- "1" Produto : "Refere-se"
+PedidoVenda "1" -- "0..*" ItemPedido : "Contém"
+PedidoCompra "1" -- "0..*" ItemPedido : "Contém"
+
+PedidoVenda "1" -- "1" Pessoa : "Cliente"
+PedidoVenda "1" -- "1" Endereco : "Entrega"
+
+PedidoCompra "1" -- "1" Pessoa : "Fornecedor"
+PedidoCompra "1" -- "1" Endereco : "Entrega"
+PedidoCompra "1" -- "1" Pessoa : "Comprador"
+
+Pagamento "1" -- "1" PedidoVenda : "Relacionado a"
+Pagamento "1" -- "1" PedidoCompra : "Relacionado a"
+
+Pagamento ..> IPagamentoProcessar : "Utiliza para processar"
+Pagamento ..> IPagamentoValidar : "Utiliza para validar"
+Pagamento ..> IPagamentoNotificar : "Utiliza para notificar"
+
+User --> Pessoa : "Composição"
+User "1" -- "0..*" Role : "Tem"
+UserServiceImpl --> UserRepository : "Usa"
+UserServiceImpl --> UserDetailsService : "Implementa"
+UserPrincipal --> User : "Associação"
+CustomBasicAuthenticationFilter --> UserServiceImpl : "Usa"
+WebSecurityConfig --> CustomBasicAuthenticationFilter : "Usa"
+WebSecurityConfig --> UserServiceImpl : "Configura"
+WebSecurityConfig --> BCryptPasswordEncoder : "Usa"
+
+UserController --> UserDetailsService : "Usa"
+
+@enduml

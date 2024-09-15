@@ -118,6 +118,9 @@ public class MunicipioServiceImpl implements MunicipioService {
 
     @Override
     public void deletar(Long id) {
+        if (!municipioRepository.existsById(id)) {
+            throw new ResourceNotFoundException(MUNICIPIO_NAO_ENCONTRADO);
+        }
         municipioRepository.deleteById(id);
     }
 

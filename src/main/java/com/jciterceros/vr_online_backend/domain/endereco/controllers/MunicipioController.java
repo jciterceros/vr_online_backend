@@ -52,7 +52,11 @@ public class MunicipioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMunicipio(@PathVariable Long id) {
-        municipioService.deletar(id);
+        try {
+            municipioService.deletar(id);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.noContent().build();
     }
 }

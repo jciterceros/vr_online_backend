@@ -117,6 +117,9 @@ public class EnderecoServiceImpl implements EnderecoService {
     public EnderecoDTO converterParaEndereco(String cep, Integer numero) {
         EnderecoViaCepAdapter enderecoViaCepAdapter = new EnderecoViaCepAdapter(mapper, municipioRepository, viaCepService);
         cep = cep.replace("-", "");
+        if (cep.length() != 8) {
+            throw new ResourceNotFoundException("CEP inválido");
+        }
         return enderecoViaCepAdapter.converterParaEndereco(cep, numero);
     }
 
@@ -129,6 +132,9 @@ public class EnderecoServiceImpl implements EnderecoService {
 
     @Override
     public void deletar(Long id) {
+        if (!enderecoRepository.existsById(id)) {
+            throw new ResourceNotFoundException(ENDERECO_NAO_ENCONTRADO);
+        }
         enderecoRepository.deleteById(id);
     }
 

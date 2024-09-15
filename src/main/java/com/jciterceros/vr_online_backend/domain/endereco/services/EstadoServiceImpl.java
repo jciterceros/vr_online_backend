@@ -109,10 +109,6 @@ public class EstadoServiceImpl implements EstadoService {
 
     @Override
     public void deletar(Long id) {
-        if(id == null) {
-            throw new MethodArgumentNotValidException("Id não pode ser nulo");
-        }
-
         if (!estadoRepository.existsById(id)) {
             throw new ResourceNotFoundException(ESTADO_NAO_ENCONTRADO);
         }

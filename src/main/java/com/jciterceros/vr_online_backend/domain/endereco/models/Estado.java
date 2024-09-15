@@ -21,6 +21,6 @@ public class Estado {
     private String descricao;
     private String sigla;
 
-    @OneToMany(mappedBy = "estado")
+    @OneToMany(mappedBy = "estado", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Municipio> municipios;
 }

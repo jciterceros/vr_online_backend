@@ -52,7 +52,11 @@ public class EstadoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEstado(@PathVariable Long id) {
-        estadoService.deletar(id);
+        try {
+            estadoService.deletar(id);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
         return ResponseEntity.noContent().build();
     }
 }

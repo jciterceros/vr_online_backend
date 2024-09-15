@@ -1,15 +1,24 @@
 package com.jciterceros.vr_online_backend.domain.produtos.services;
 
-import com.jciterceros.vr_online_backend.domain.produtos.models.Produto;
+import com.jciterceros.vr_online_backend.domain.dto.produto.ProdutoDTO;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProdutoService {
-    List<Produto> listAll();
+    String validateFields(ProdutoDTO productDTO);
 
-    Produto create(Produto product);
+    List<ProdutoDTO> listarTodos();
 
-    Produto update(Produto product);
+    Optional<ProdutoDTO> buscarPorId(Long id);
 
-    void delete(Long id);
+    ProdutoDTO salvar(ProdutoDTO productDTO);
+
+    ProdutoDTO atualizar(Long id, ProdutoDTO productDTO);
+
+    void deletar(Long id);
+//    List<Produto> listAll();
+//    Produto create(Produto product);
+//    Produto update(Produto product);
+//    void delete(Long id);
 }

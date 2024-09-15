@@ -19,7 +19,6 @@ public class EstadoController {
         this.estadoService = estadoService;
     }
 
-    // Endpoint para listar todos os estados
     @GetMapping
     public ResponseEntity<List<EstadoDTO>> listarTodos() {
         List<EstadoDTO> estados = estadoService.listarTodos();
@@ -29,14 +28,12 @@ public class EstadoController {
         return ResponseEntity.ok(estados);
     }
 
-    // Endpoint para buscar um estado por ID
     @GetMapping("/{id}")
     public ResponseEntity<EstadoDTO> buscarPorId(@PathVariable Long id) {
         Optional<EstadoDTO> estado = estadoService.buscarPorId(id);
         return estado.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Endpoint para criar um novo estado
     @PostMapping
     public ResponseEntity<EstadoDTO> salvar(@RequestBody EstadoDTO estadoDTO) {
         EstadoDTO estadoCriado = estadoService.salvar(estadoDTO);
@@ -47,4 +44,15 @@ public class EstadoController {
         return ResponseEntity.ok(estadoCriado);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<EstadoDTO> updateEstado(@PathVariable Long id, @RequestBody EstadoDTO estadoDTO) {
+        EstadoDTO updatedEstado = estadoService.atualizar(id, estadoDTO);
+        return ResponseEntity.ok(updatedEstado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEstado(@PathVariable Long id) {
+        estadoService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 }

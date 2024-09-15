@@ -1,58 +1,58 @@
 package com.jciterceros.vr_online_backend.domain.endereco.adapters;
 
 import com.jciterceros.vr_online_backend.domain.dto.endereco.EnderecoDTO;
-import com.jciterceros.vr_online_backend.domain.dto.endereco.EstadoDTO;
 import com.jciterceros.vr_online_backend.domain.dto.endereco.MunicipioDTO;
 import com.jciterceros.vr_online_backend.domain.dto.endereco.ViaCepDTO;
-import com.jciterceros.vr_online_backend.domain.endereco.models.*;
-import com.jciterceros.vr_online_backend.domain.endereco.repositories.EstadoRepository;
+import com.jciterceros.vr_online_backend.domain.endereco.models.Endereco;
+import com.jciterceros.vr_online_backend.domain.endereco.models.IEndereco;
+import com.jciterceros.vr_online_backend.domain.endereco.models.Municipio;
 import com.jciterceros.vr_online_backend.domain.endereco.repositories.MunicipioRepository;
+import com.jciterceros.vr_online_backend.domain.endereco.services.ViaCepService;
 import com.jciterceros.vr_online_backend.domain.exception.ResourceNotFoundException;
-import lombok.Data;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-//@Data
 @Component
 public class EnderecoViaCepAdapter implements IEndereco {
-    private ViaCep viaCep;
+    private ViaCepDTO viaCepDTO;
     private Integer numero;
-
     private final ModelMapper mapper;
-
     private final MunicipioRepository municipioRepository;
-    private final EstadoRepository estadoRepository;
+    private final ViaCepService viaCepService;
 
     @Autowired
-    public EnderecoViaCepAdapter(ModelMapper mapper, MunicipioRepository municipioRepository, EstadoRepository estadoRepository) {
+    public EnderecoViaCepAdapter(ModelMapper mapper, MunicipioRepository municipioRepository, ViaCepService viaCepService) {
         this.mapper = mapper;
         this.municipioRepository = municipioRepository;
-        this.estadoRepository = estadoRepository;
+        this.viaCepService = viaCepService;
         configureMapper();
     }
 
-    public EnderecoDTO converterParaEndereco(ViaCepDTO viaCepDTO) {
+    public EnderecoDTO converterParaEndereco(String cep, Integer numero) {
+        viaCepDTO = viaCepService.buscarEnderecoPorCep(cep);
+        if (viaCepDTO == null || viaCepDTO.getIbge() == null) {
+            throw new ResourceNotFoundException("Endereço não encontrado");
+        }
+
         Municipio municipio = municipioRepository.findById(Long.parseLong(viaCepDTO.getIbge()))
                 .orElseThrow(() -> new ResourceNotFoundException("Municipio não encontrado"));
 
-        Estado estado = estadoRepository.findById(municipio.getEstado().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Estado não encontrado"));
-
         EnderecoDTO enderecoDTO = new EnderecoDTO();
+
         enderecoDTO.setRua(viaCepDTO.getLogradouro());
+        enderecoDTO.setNumero(numero);
         enderecoDTO.setComplemento(viaCepDTO.getComplemento());
-        enderecoDTO.setCep(viaCepDTO.getCep());
+        enderecoDTO.setCep(viaCepDTO.getCep().replace("-", ""));
         enderecoDTO.setBairro(viaCepDTO.getBairro());
 
         enderecoDTO.setMunicipio(mapper.map(municipio, MunicipioDTO.class));
-//        enderecoDTO.setMunicipio(new MunicipioDTO(municipio.getId(), municipio.getDescricao(),new EstadoDTO(estado.getId(), estado.getDescricao(), estado.getSigla())));
         return enderecoDTO;
     }
 
     @Override
     public String getRua() {
-        return viaCep.getLogradouro();
+        return viaCepDTO.getLogradouro();
     }
 
     @Override
@@ -62,23 +62,23 @@ public class EnderecoViaCepAdapter implements IEndereco {
 
     @Override
     public String getComplemento() {
-        return viaCep.getComplemento();
+        return viaCepDTO.getComplemento();
     }
 
     @Override
     public String getCep() {
-        return viaCep.getCep();
+        return viaCepDTO.getCep();
     }
 
     @Override
     public String getBairro() {
-        return viaCep.getBairro();
+        return viaCepDTO.getBairro();
     }
 
     @Override
     public Municipio getMunicipio() {
         Municipio municipio = new Municipio();
-        municipio.setDescricao(viaCep.getLocalidade());
+        municipio.setDescricao(viaCepDTO.getLocalidade());
         return municipio;
     }
 

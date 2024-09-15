@@ -6,13 +6,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MunicipioService {
-    MunicipioDTO salvar(MunicipioDTO municipioDTO);
-
-    Optional<MunicipioDTO> buscarPorId(Long id);
+    String validateFields(MunicipioDTO municipioDTO);
 
     List<MunicipioDTO> listarTodos();
 
-    void deletar(Long id);
+    Optional<MunicipioDTO> buscarPorId(Long id);
+
+    MunicipioDTO salvar(MunicipioDTO municipioDTO);
 
     MunicipioDTO atualizar(Long id, MunicipioDTO municipioDTO);
+
+    void deletar(Long id);
 }

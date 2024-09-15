@@ -2,49 +2,53 @@ package com.jciterceros.vr_online_backend.domain.endereco.services;
 
 import com.jciterceros.vr_online_backend.domain.dto.endereco.EnderecoDTO;
 import com.jciterceros.vr_online_backend.domain.dto.endereco.MunicipioDTO;
-import com.jciterceros.vr_online_backend.domain.dto.endereco.ViaCepDTO;
-import com.jciterceros.vr_online_backend.domain.endereco.models.Endereco;
 import com.jciterceros.vr_online_backend.domain.endereco.adapters.EnderecoViaCepAdapter;
+import com.jciterceros.vr_online_backend.domain.endereco.models.Endereco;
+import com.jciterceros.vr_online_backend.domain.endereco.models.Municipio;
 import com.jciterceros.vr_online_backend.domain.endereco.repositories.EnderecoRepository;
-import com.jciterceros.vr_online_backend.domain.endereco.repositories.EstadoRepository;
 import com.jciterceros.vr_online_backend.domain.endereco.repositories.MunicipioRepository;
+import com.jciterceros.vr_online_backend.domain.exception.DatabaseException;
 import com.jciterceros.vr_online_backend.domain.exception.ResourceNotFoundException;
+import com.jciterceros.vr_online_backend.domain.exception.handler.MethodArgumentNotValidException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class EnderecoServiceImpl implements EnderecoService {
 
+    public static final String ENDERECO_NAO_ENCONTRADO = "Endereco não encontrado";
     private final ModelMapper mapper;
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    Validator validator = factory.getValidator();
     private final EnderecoRepository enderecoRepository;
     private final MunicipioRepository municipioRepository;
-    private final EstadoRepository estadoRepository;
 
     @Autowired
-    public EnderecoServiceImpl(ModelMapper mapper, EnderecoRepository enderecoRepository, MunicipioRepository municipioRepository, EstadoRepository estadoRepository) {
+    private ViaCepService viaCepService;
+
+    @Autowired
+    public EnderecoServiceImpl(ModelMapper mapper, EnderecoRepository enderecoRepository, MunicipioRepository municipioRepository) {
         this.mapper = mapper;
         this.enderecoRepository = enderecoRepository;
         this.municipioRepository = municipioRepository;
-        this.estadoRepository = estadoRepository;
         configureMapper();
     }
 
     @Override
-    public EnderecoDTO salvar(EnderecoDTO enderecoDTO) {
-        Endereco endereco = mapper.map(enderecoDTO, Endereco.class);
-        endereco = enderecoRepository.save(endereco);
+    public String validateFields(EnderecoDTO enderecoDTO) {
+        Set<ConstraintViolation<EnderecoDTO>> violations = validator.validate(enderecoDTO);
 
-        return mapper.map(endereco, EnderecoDTO.class);
-    }
-
-    @Override
-    public Optional<EnderecoDTO> buscarPorId(Long id) {
-        return enderecoRepository.findById(id)
-                .map(endereco -> mapper.map(endereco, EnderecoDTO.class));
+        return violations.isEmpty() ? null : violations.iterator().next().getMessage();
     }
 
     @Override
@@ -55,27 +59,65 @@ public class EnderecoServiceImpl implements EnderecoService {
     }
 
     @Override
-    public void deletar(Long id) {
-        enderecoRepository.deleteById(id);
+    public Optional<EnderecoDTO> buscarPorId(Long id) {
+        if (!enderecoRepository.existsById(id)) {
+            throw new ResourceNotFoundException(ENDERECO_NAO_ENCONTRADO);
+        }
+        return enderecoRepository.findById(id)
+                .map(endereco -> mapper.map(endereco, EnderecoDTO.class));
     }
 
     @Override
-    public EnderecoDTO atualizar(Long id, EnderecoDTO enderecoDTO) {
-        if (!enderecoRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Endereco não encontrado");
+    public EnderecoDTO salvar(EnderecoDTO enderecoDTO) {
+        String error = validateFields(enderecoDTO);
+        if (error != null) {
+            throw new DatabaseException(error);
         }
+
         Endereco endereco = mapper.map(enderecoDTO, Endereco.class);
-        endereco = enderecoRepository.save(endereco);
+        try {
+            endereco = enderecoRepository.save(endereco);
+        } catch (DatabaseException e) {
+            throw new DatabaseException("Erro ao salvar o endereço");
+        }
 
         return mapper.map(endereco, EnderecoDTO.class);
     }
 
     @Override
-    public EnderecoDTO converterParaEndereco(ViaCepDTO viaCepDTO, Integer numero) {
-        EnderecoDTO enderecoDTO = new EnderecoViaCepAdapter(mapper, municipioRepository,estadoRepository).converterParaEndereco(viaCepDTO);
-//        EnderecoDTO enderecoDTO = new EnderecoViaCepAdapter(municipioRepository,estadoRepository).converterParaEndereco(viaCepDTO);
-        enderecoDTO.setNumero(numero);
-        return enderecoDTO;
+    public EnderecoDTO atualizar(Long id, EnderecoDTO enderecoDTO) {
+        String error = validateFields(enderecoDTO);
+        if (error != null) {
+            throw new DatabaseException(error);
+        }
+        if (id == null) {
+            throw new MethodArgumentNotValidException("Id não pode ser nulo");
+        }
+
+        if (!enderecoRepository.existsById(id)) {
+            throw new ResourceNotFoundException(ENDERECO_NAO_ENCONTRADO);
+        }
+
+        Municipio municipio = municipioRepository.findById(enderecoDTO.getMunicipio().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Município não encontrado"));
+
+        Endereco endereco = mapper.map(enderecoDTO, Endereco.class);
+        endereco.setId(id);
+        endereco.setMunicipio(municipio);
+        try {
+            endereco = enderecoRepository.save(endereco);
+        } catch (DatabaseException e) {
+            throw new DatabaseException("Erro ao atualizar o endereço");
+        }
+
+        return mapper.map(endereco, EnderecoDTO.class);
+    }
+
+    @Override
+    public EnderecoDTO converterParaEndereco(String cep, Integer numero) {
+        EnderecoViaCepAdapter enderecoViaCepAdapter = new EnderecoViaCepAdapter(mapper, municipioRepository, viaCepService);
+        cep = cep.replace("-", "");
+        return enderecoViaCepAdapter.converterParaEndereco(cep, numero);
     }
 
     @Override
@@ -85,10 +127,18 @@ public class EnderecoServiceImpl implements EnderecoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Município não encontrado"));
     }
 
+    @Override
+    public void deletar(Long id) {
+        enderecoRepository.deleteById(id);
+    }
+
     public void configureMapper() {
-        mapper.typeMap(EnderecoDTO.class, Endereco.class).addMappings(mapping -> {
-            mapping.skip(Endereco::setId);
-            mapping.skip(Endereco::setContatoService);
+        mapper.addMappings(new PropertyMap<EnderecoDTO, Endereco>() {
+            @Override
+            protected void configure() {
+                skip(destination.getId());
+                skip(destination.getContatoService());
+            }
         });
     }
 }

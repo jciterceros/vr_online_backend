@@ -8,17 +8,21 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EnderecoService {
-    EnderecoDTO salvar(EnderecoDTO enderecoDTO);
-
-    Optional<EnderecoDTO> buscarPorId(Long id);
+    String validateFields(EnderecoDTO enderecoDTO);
 
     List<EnderecoDTO> listarTodos();
 
-    void deletar(Long id);
+    Optional<EnderecoDTO> buscarPorId(Long id);
+
+    EnderecoDTO salvar(EnderecoDTO enderecoDTO);
 
     EnderecoDTO atualizar(Long id, EnderecoDTO enderecoDTO);
 
-    EnderecoDTO converterParaEndereco(ViaCepDTO viaCepDTO, Integer numero);
+    //EnderecoDTO converterParaEndereco(ViaCepDTO viaCepDTO, Integer numero);
+    //TODO: Implementar
+    EnderecoDTO converterParaEndereco(String cep, Integer numero);
 
     MunicipioDTO buscarMunicipioPorId(Long id);
+
+    void deletar(Long id);
 }

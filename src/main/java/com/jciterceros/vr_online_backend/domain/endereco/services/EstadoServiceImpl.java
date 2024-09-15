@@ -5,6 +5,7 @@ import com.jciterceros.vr_online_backend.domain.endereco.models.Estado;
 import com.jciterceros.vr_online_backend.domain.endereco.repositories.EstadoRepository;
 import com.jciterceros.vr_online_backend.domain.exception.DatabaseException;
 import com.jciterceros.vr_online_backend.domain.exception.ResourceNotFoundException;
+import com.jciterceros.vr_online_backend.domain.exception.handler.MethodArgumentNotValidException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -43,6 +44,22 @@ public class EstadoServiceImpl implements EstadoService {
     }
 
     @Override
+    public List<EstadoDTO> listarTodos() {
+        return estadoRepository.findAll().stream()
+                .map(estado -> mapper.map(estado, EstadoDTO.class))
+                .toList();
+    }
+
+    @Override
+    public Optional<EstadoDTO> buscarPorId(Long id) {
+        if (!estadoRepository.existsById(id)) {
+            throw new ResourceNotFoundException(ESTADO_NAO_ENCONTRADO);
+        }
+        return estadoRepository.findById(id)
+                .map(estado -> mapper.map(estado, EstadoDTO.class));
+    }
+
+    @Override
     public EstadoDTO salvar(EstadoDTO estadoDTO) {
         String error = validateFields(estadoDTO);
         if (error != null) {
@@ -64,43 +81,42 @@ public class EstadoServiceImpl implements EstadoService {
     }
 
     @Override
-    public Optional<EstadoDTO> buscarPorId(Long id) {
-        if (!estadoRepository.existsById(id)) {
-            throw new ResourceNotFoundException(ESTADO_NAO_ENCONTRADO);
-        }
-        return estadoRepository.findById(id)
-                .map(estado -> mapper.map(estado, EstadoDTO.class));
-    }
-
-    @Override
-    public List<EstadoDTO> listarTodos() {
-        return estadoRepository.findAll().stream()
-                .map(estado -> mapper.map(estado, EstadoDTO.class))
-                .toList();
-    }
-
-    @Override
-    public void deletar(Long id) {
-        if (!estadoRepository.existsById(id)) {
-            throw new ResourceNotFoundException(ESTADO_NAO_ENCONTRADO);
-        }
-        estadoRepository.deleteById(id);
-    }
-
-    @Override
     public EstadoDTO atualizar(Long id, EstadoDTO estadoDTO) {
         String error = validateFields(estadoDTO);
         if (error != null) {
             throw new DatabaseException(error);
         }
 
+        if (id == null) {
+            throw new MethodArgumentNotValidException("Id não pode ser nulo");
+        }
+
         if (!estadoRepository.existsById(id)) {
             throw new ResourceNotFoundException(ESTADO_NAO_ENCONTRADO);
         }
+
         Estado estado = mapper.map(estadoDTO, Estado.class);
-        estado = estadoRepository.save(estado);
+        estado.setId(id);
+
+        try{
+            estado = estadoRepository.save(estado);
+        } catch (DatabaseException e) {
+            throw new DatabaseException("Erro ao atualizar estado");
+        }
 
         return mapper.map(estado, EstadoDTO.class);
+    }
+
+    @Override
+    public void deletar(Long id) {
+        if(id == null) {
+            throw new MethodArgumentNotValidException("Id não pode ser nulo");
+        }
+
+        if (!estadoRepository.existsById(id)) {
+            throw new ResourceNotFoundException(ESTADO_NAO_ENCONTRADO);
+        }
+        estadoRepository.deleteById(id);
     }
 
     public void configureMapper() {

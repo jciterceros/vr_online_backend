@@ -5310,3 +5310,8 @@ insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id)
 insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 2, 1);
 insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 3, 2);
 insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 4, 2);
+
+-- Insert Tabela Telefone
+insert into tb_telefone (fixo, celular, comercial, principal, contato_service_id) values ('11111111', '22222222', '33333333', '11111111', null);
+insert into tb_telefone (fixo, celular, comercial, principal, contato_service_id) values ('44444444', '55555555', '66666666', '55555555', null);
+insert into tb_telefone (fixo, celular, comercial, principal, contato_service_id) values ('77777777', '88888888', '99999999', '99999999', null);

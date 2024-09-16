@@ -2,14 +2,12 @@ package com.jciterceros.vr_online_backend.domain.pessoa.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Table(name = "telefone")
-@Getter
-@Setter
+@Table(name = "tb_telefone")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Telefone {

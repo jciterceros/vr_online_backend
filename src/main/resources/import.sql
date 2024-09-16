@@ -5306,4 +5306,7 @@ insert into tb_local_armazenamento (nome, endereco_id, capacidade_total, capacid
 insert into tb_local_armazenamento (nome, endereco_id, capacidade_total, capacidade_disponivel) values ('Local 2', 2, 100, 100);
 
 -- Insert Tabela Estoque
---insert into tb_estoque (quantidade, tipo_metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 1, 1);
+insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 1, 1);
+insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 2, 1);
+insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 3, 2);
+insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 4, 2);

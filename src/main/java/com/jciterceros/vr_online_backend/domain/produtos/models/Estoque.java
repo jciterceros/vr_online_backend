@@ -17,13 +17,13 @@ public class Estoque {
     private BigDecimal quantidade;
 
     @Enumerated(EnumType.STRING)
-    private Metrica tipoMedida;
+    private Metrica metrica;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "produto_id")
     private Produto produto;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "local_armazenamento_id")
     private LocalArmazenamento localArmazenamento;
 }

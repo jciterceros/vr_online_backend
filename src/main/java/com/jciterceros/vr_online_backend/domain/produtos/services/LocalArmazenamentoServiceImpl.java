@@ -24,6 +24,7 @@ import java.util.Set;
 public class LocalArmazenamentoServiceImpl implements LocalArmazenamentoService {
 
     public static final String LOCAL_DE_ARMAZENAMENTO_NAO_ENCONTRADO = "Local de armazenamento não encontrado";
+    public static final String ENDERECO_NAO_ENCONTRADO = "Endereço não encontrado";
     private final ModelMapper mapper;
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
@@ -69,7 +70,7 @@ public class LocalArmazenamentoServiceImpl implements LocalArmazenamentoService 
         }
 
         Endereco endereco = enderecoRepository.findById(localArmazenamentoDTO.getEndereco().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException(ENDERECO_NAO_ENCONTRADO));
 
         LocalArmazenamento localArmazenamento = mapper.map(localArmazenamentoDTO, LocalArmazenamento.class);
         localArmazenamento.setEndereco(endereco);
@@ -94,7 +95,7 @@ public class LocalArmazenamentoServiceImpl implements LocalArmazenamentoService 
         }
 
         Endereco endereco = enderecoRepository.findById(localArmazenamentoDTO.getEndereco().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException(ENDERECO_NAO_ENCONTRADO));
 
         LocalArmazenamento localArmazenamento = mapper.map(localArmazenamentoDTO, LocalArmazenamento.class);
         localArmazenamento.setId(id);

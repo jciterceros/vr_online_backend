@@ -5288,8 +5288,22 @@ INSERT INTO tb_municipio (id, descricao, estado_id) VALUES (3529203, 'MARTINOPOL
 INSERT INTO tb_municipio (id, descricao, estado_id) VALUES (3529302, 'MATAO', 35);
 INSERT INTO tb_municipio (id, descricao, estado_id) VALUES (3529401, 'MAUA', 35);
 
+-- Insert Tabela Endereco
+insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_service_id) values ('Rua 1', 1, 'Complemento 1', '12345678', 'Bairro 1', 3528403, null);
+insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_service_id) values ('Rua 2', 2, 'Complemento 2', '12345678', 'Bairro 2', 3528403, null);
+insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_service_id) values ('Rua 3', 3, 'Complemento 3', '12345678', 'Bairro 3', 3528403, null);
+insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_service_id) values ('Rua 4', 4, 'Complemento 4', '12345678', 'Bairro 4', 3528403, null);
+
 -- Insert Tabela Produto
 insert into tb_produto (marca, modelo, descricao, metrica, valor_custo, valor_venda) values ('Product 1', 'Model 1', 'Description 1', 'UNIDADE', 10.00, 20.00);
 insert into tb_produto (marca, modelo, descricao, metrica, valor_custo, valor_venda) values ('Product 2', 'Model 2', 'Description 2', 'UNIDADE', 10.00, 20.00);
 insert into tb_produto (marca, modelo, descricao, metrica, valor_custo, valor_venda) values ('Product 3', 'Model 3', 'Description 3', 'UNIDADE', 10.00, 20.00);
 insert into tb_produto (marca, modelo, descricao, metrica, valor_custo, valor_venda) values ('Product 4', 'Model 4', 'Description 4', 'UNIDADE', 10.00, 20.00);
+
+
+-- Insert Tabela Local Armazenamento
+insert into tb_local_armazenamento (nome, endereco_id, capacidade_total, capacidade_disponivel) values ('Local 1', 1, 100, 100);
+insert into tb_local_armazenamento (nome, endereco_id, capacidade_total, capacidade_disponivel) values ('Local 2', 2, 100, 100);
+
+-- Insert Tabela Estoque
+--insert into tb_estoque (quantidade, tipo_metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 1, 1);

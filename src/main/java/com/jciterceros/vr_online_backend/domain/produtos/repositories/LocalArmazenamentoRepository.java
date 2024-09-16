@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LocalArmazenamentoRepository extends JpaRepository<LocalArmazenamento, Long> {
+
 }

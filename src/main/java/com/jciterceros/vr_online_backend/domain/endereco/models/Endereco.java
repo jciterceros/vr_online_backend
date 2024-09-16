@@ -2,10 +2,7 @@ package com.jciterceros.vr_online_backend.domain.endereco.models;
 
 import com.jciterceros.vr_online_backend.domain.pessoa.models.ContatoService;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "tb_endereco")
@@ -13,6 +10,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Endereco implements IEndereco {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +22,11 @@ public class Endereco implements IEndereco {
     private String cep;
     private String bairro;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "municipio_id")
     private Municipio municipio;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "contato_service_id")
     private ContatoService contatoService;
 }

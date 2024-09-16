@@ -29,6 +29,8 @@ public class EnderecoDTO {
     @Size(min = 3, max = 100, message = "Bairro deve ter entre 3 e 100 caracteres")
     private String bairro;
 
+    //    @JsonIgnore
     @NotNull(message = "Município é obrigatório")
-    private MunicipioDTO municipio;  // Associação com MunicipioDTO
+    private MunicipioDTO municipio;
+
 }

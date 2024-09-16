@@ -17,8 +17,4 @@ public interface ProdutoService {
     ProdutoDTO atualizar(Long id, ProdutoDTO productDTO);
 
     void deletar(Long id);
-//    List<Produto> listAll();
-//    Produto create(Produto product);
-//    Produto update(Produto product);
-//    void delete(Long id);
 }

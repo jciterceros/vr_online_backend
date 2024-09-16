@@ -1,10 +1,7 @@
 package com.jciterceros.vr_online_backend.domain.endereco.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "tb_municipio")
@@ -12,6 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class Municipio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

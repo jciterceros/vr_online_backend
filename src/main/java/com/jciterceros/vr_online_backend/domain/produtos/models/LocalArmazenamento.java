@@ -2,19 +2,17 @@ package com.jciterceros.vr_online_backend.domain.produtos.models;
 
 import com.jciterceros.vr_online_backend.domain.endereco.models.Endereco;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "local_armazenamento")
+@Table(name = "tb_local_armazenamento")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
 public class LocalArmazenamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,8 +20,7 @@ public class LocalArmazenamento {
 
     private String nome;
 
-//    @OneToOne
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 

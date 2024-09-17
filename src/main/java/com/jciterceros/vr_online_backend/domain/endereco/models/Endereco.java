@@ -1,6 +1,6 @@
 package com.jciterceros.vr_online_backend.domain.endereco.models;
 
-import com.jciterceros.vr_online_backend.domain.pessoa.models.ContatoService;
+import com.jciterceros.vr_online_backend.domain.pessoa.models.Contato;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +27,6 @@ public class Endereco implements IEndereco {
     private Municipio municipio;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "contato_service_id")
-    private ContatoService contatoService;
+    @JoinColumn(name = "contato_id")
+    private Contato contato;
 }

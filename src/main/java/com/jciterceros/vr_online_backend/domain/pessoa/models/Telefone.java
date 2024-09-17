@@ -21,6 +21,6 @@ public class Telefone {
     private String principal;
 
     @ManyToOne
-    @JoinColumn(name = "contato_service_id")
-    private ContatoService contatoService;
+    @JoinColumn(name = "contato_id")
+    private Contato contato;
 }

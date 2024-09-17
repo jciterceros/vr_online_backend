@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -14,6 +14,6 @@ import java.util.Date;
 public class PessoaFisica extends Pessoa {
     private String cpf;
     private String rg;
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
     private String nomeSocial;
 }

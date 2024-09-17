@@ -143,7 +143,7 @@ public class EnderecoServiceImpl implements EnderecoService {
             @Override
             protected void configure() {
                 skip(destination.getId());
-                skip(destination.getContatoService());
+                skip(destination.getContato());
             }
         });
     }

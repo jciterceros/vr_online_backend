@@ -2,17 +2,17 @@ package com.jciterceros.vr_online_backend.domain.pessoa.models;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import java.util.List;
 
 @Entity
-@Table(name = "pessoa")
-@Getter
-@Setter
+@Table(name = "tb_pessoa")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class Pessoa {
+public class Pessoa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +26,6 @@ public abstract class Pessoa {
     @Enumerated(EnumType.STRING)
     private SituacaoCPF situacao;
 
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "pessoa")
-    private ContatoService contatoService;
+    @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)
+    private List<Contato> contato;
 }

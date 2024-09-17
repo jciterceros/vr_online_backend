@@ -5289,10 +5289,10 @@ INSERT INTO tb_municipio (id, descricao, estado_id) VALUES (3529302, 'MATAO', 35
 INSERT INTO tb_municipio (id, descricao, estado_id) VALUES (3529401, 'MAUA', 35);
 
 -- Insert Tabela Endereco
-insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_service_id) values ('Rua 1', 1, 'Complemento 1', '12345678', 'Bairro 1', 3528403, null);
-insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_service_id) values ('Rua 2', 2, 'Complemento 2', '12345678', 'Bairro 2', 3528403, null);
-insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_service_id) values ('Rua 3', 3, 'Complemento 3', '12345678', 'Bairro 3', 3528403, null);
-insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_service_id) values ('Rua 4', 4, 'Complemento 4', '12345678', 'Bairro 4', 3528403, null);
+insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_id) values ('Rua 1', 1, 'Complemento 1', '12345678', 'Bairro 1', 3528403, null);
+insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_id) values ('Rua 2', 2, 'Complemento 2', '12345678', 'Bairro 2', 3528403, null);
+insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_id) values ('Rua 3', 3, 'Complemento 3', '12345678', 'Bairro 3', 3528403, null);
+insert into tb_endereco (rua, numero, complemento, cep, bairro, municipio_id, contato_id) values ('Rua 4', 4, 'Complemento 4', '12345678', 'Bairro 4', 3528403, null);
 
 -- Insert Tabela Produto
 insert into tb_produto (marca, modelo, descricao, metrica, valor_custo, valor_venda) values ('Product 1', 'Model 1', 'Description 1', 'UNIDADE', 10.00, 20.00);
@@ -5312,6 +5312,14 @@ insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id)
 insert into tb_estoque (quantidade, metrica, produto_id, local_armazenamento_id) values (10, 'UNIDADE', 4, 2);
 
 -- Insert Tabela Telefone
-insert into tb_telefone (fixo, celular, comercial, principal, contato_service_id) values ('11111111', '22222222', '33333333', '11111111', null);
-insert into tb_telefone (fixo, celular, comercial, principal, contato_service_id) values ('44444444', '55555555', '66666666', '55555555', null);
-insert into tb_telefone (fixo, celular, comercial, principal, contato_service_id) values ('77777777', '88888888', '99999999', '99999999', null);
+insert into tb_telefone (fixo, celular, comercial, principal, contato_id) values ('11111111', '22222222', '33333333', '11111111', null);
+insert into tb_telefone (fixo, celular, comercial, principal, contato_id) values ('44444444', '55555555', '66666666', '55555555', null);
+insert into tb_telefone (fixo, celular, comercial, principal, contato_id) values ('77777777', '88888888', '99999999', '99999999', null);
+
+-- Insert Tabela Pessoa Fisica
+insert into tb_pessoa (data_nascimento, dtype, cnpj, cpf, email, inscricao_estadual, inscricao_municipal, nome, nome_social, ramo_atividade, razao_social, rg, situacao, situacao_cadastral, tipo) values ('1985-10-25', 'PessoaFisica', NULL, '123.456.789-10', 'exemplo@email.com', NULL, NULL, 'João Silva', 'João S.', NULL, NULL, 'MG-12.345.678', 'REGULAR', 'ATIVO', 'FISICA');
+insert into tb_pessoa (data_nascimento, dtype, cnpj, cpf, email, inscricao_estadual, inscricao_municipal, nome, nome_social, ramo_atividade, razao_social, rg, situacao, situacao_cadastral, tipo) values ('1985-10-25', 'PessoaFisica', NULL, '123.456.789-11', 'exemplo2@email.com', NULL, NULL, 'Maria Silva', 'Maria S.', NULL, NULL, 'MG-12.345.679', 'REGULAR', 'ATIVO', 'FISICA');
+
+-- Insert Tabela Pessoa Juridica
+insert into tb_pessoa (data_nascimento, dtype, cnpj, cpf, email, inscricao_estadual, inscricao_municipal, nome, nome_social, ramo_atividade, razao_social, rg, situacao, situacao_cadastral, tipo) values (NULL, 'PessoaJuridica', '12.345.678/0001-90', NULL, 'empresa@email.com', '123456789', '987654321', 'Empresa XYZ LTDA', NULL, 'Comércio de Alimentos', 'Empresa XYZ LTDA', NULL, 'REGULAR', 'ATIVO', 'JURIDICA');
+insert into tb_pessoa (data_nascimento, dtype, cnpj, cpf, email, inscricao_estadual, inscricao_municipal, nome, nome_social, ramo_atividade, razao_social, rg, situacao, situacao_cadastral, tipo) values (NULL, 'PessoaJuridica', '12.345.678/0001-91', NULL, 'empresa2@email.com', '123456789', '987654321', 'Empresa XYZ2 LTDA', NULL, 'Comércio de Alimentos', 'Empresa XYZ2 LTDA', NULL, 'REGULAR', 'ATIVO', 'JURIDICA');

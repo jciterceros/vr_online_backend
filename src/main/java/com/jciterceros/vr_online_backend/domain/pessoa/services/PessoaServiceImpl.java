@@ -34,6 +34,7 @@ public class PessoaServiceImpl implements PessoaService {
         this.mapper = mapper;
         this.pessoaFactory = pessoaFactory;
         this.pessoaRepository = pessoaRepository;
+        configureMapper();
     }
 
     @Override
@@ -83,14 +84,15 @@ public class PessoaServiceImpl implements PessoaService {
         if (error != null) {
             throw new DatabaseException(error);
         }
+
         if (!pessoaRepository.existsById(id)) {
             throw new ResourceNotFoundException(PESSOA_NAO_ENCONTRADA);
         }
 
-        Pessoa pessoa = mapper.map(pessoaDTO, Pessoa.class);
+        Pessoa pessoa = pessoaFactory.createPessoa(pessoaDTO);
         pessoa.setId(id);
         try {
-            pessoa = pessoaRepository.save(pessoa);
+            pessoaRepository.save(pessoa);
         } catch (DatabaseException e) {
             throw new DatabaseException("Erro ao atualizar pessoa");
         }

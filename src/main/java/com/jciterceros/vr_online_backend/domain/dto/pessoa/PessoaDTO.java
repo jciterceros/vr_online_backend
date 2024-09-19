@@ -1,5 +1,6 @@
 package com.jciterceros.vr_online_backend.domain.dto.pessoa;
 
+import com.jciterceros.vr_online_backend.domain.exception.handler.MethodArgumentNotValidException;
 import com.jciterceros.vr_online_backend.domain.pessoa.models.SituacaoCPF;
 import com.jciterceros.vr_online_backend.domain.pessoa.models.TipoPessoa;
 import jakarta.persistence.EnumType;
@@ -9,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Data
 @NoArgsConstructor
@@ -32,5 +34,30 @@ public class PessoaDTO {
     @Enumerated(EnumType.STRING)
     private SituacaoCPF situacao;
 
-//    private List<ContatoDTO> contato;
+    private PessoaFisicaDTO pessoaFisica;
+    private PessoaJuridicaDTO pessoaJuridica;
+
+    @Autowired
+    public PessoaDTO(PessoaFisicaDTO pessoaFisica, PessoaJuridicaDTO pessoaJuridica) {
+        this.pessoaFisica = pessoaFisica;
+        this.pessoaJuridica = pessoaJuridica;
+        assignPessoaDTO();
+    }
+
+    public void assignPessoaDTO() {
+        if (tipo == TipoPessoa.FISICA) {
+            if (pessoaFisica == null) {
+                throw new MethodArgumentNotValidException("Pessoa física não informada");
+            }
+            pessoaFisica = new PessoaFisicaDTO();
+        } else {
+            if (pessoaJuridica == null) {
+                throw new MethodArgumentNotValidException("Pessoa jurídica não informada");
+            }
+            pessoaJuridica = new PessoaJuridicaDTO();
+        }
+    }
+
+    // TODO: Implementar ContatoDTO e mostrar neste DTO
+    // private List<ContatoDTO> contato;
 }

@@ -2,10 +2,7 @@ package com.jciterceros.vr_online_backend.domain.pessoa.services;
 
 import com.jciterceros.vr_online_backend.domain.dto.pessoa.PessoaDTO;
 import com.jciterceros.vr_online_backend.domain.pessoa.exception.InvalidPessoaException;
-import com.jciterceros.vr_online_backend.domain.pessoa.models.Pessoa;
-import com.jciterceros.vr_online_backend.domain.pessoa.models.PessoaFisica;
-import com.jciterceros.vr_online_backend.domain.pessoa.models.PessoaJuridica;
-import com.jciterceros.vr_online_backend.domain.pessoa.models.SituacaoCNPJ;
+import com.jciterceros.vr_online_backend.domain.pessoa.models.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -47,16 +44,38 @@ public class PessoaFactoryImpl implements PessoaFactory {
 
     @Override
     public Pessoa createPessoa(PessoaDTO pessoaDTO) {
-        if (pessoaDTO.getTipo().equals("FISICA")) {
+        if (pessoaDTO.getTipo().equals(TipoPessoa.FISICA)) {
             PessoaFisica pessoaFisica = createPessoaFisica();
-            //TODO: verify and set fields on pessoaFisica from pessoaDTO
+
+            pessoaFisica.setNome(pessoaDTO.getNome());
+            pessoaFisica.setEmail(pessoaDTO.getEmail());
+            pessoaFisica.setTipo(pessoaDTO.getTipo());
+            pessoaFisica.setSituacao(pessoaDTO.getSituacao());
+
+            pessoaFisica.setCpf(pessoaDTO.getPessoaFisica().getCpf());
+            pessoaFisica.setRg(pessoaDTO.getPessoaFisica().getRg());
+            pessoaFisica.setDataNascimento(LocalDate.parse(pessoaDTO.getPessoaFisica().getDataNascimento()));
+            pessoaFisica.setNomeSocial(pessoaDTO.getPessoaFisica().getNomeSocial());
+
             return pessoaFisica;
-        }
-        if (pessoaDTO.getTipo().equals("JURIDICA")) {
+        } else if (pessoaDTO.getTipo().equals(TipoPessoa.JURIDICA)) {
             PessoaJuridica pessoaJuridica = createPessoaJuridica();
-            //TODO: verify set fields on pessoaJuridica from pessoaDTO
+
+            pessoaJuridica.setNome(pessoaDTO.getNome());
+            pessoaJuridica.setEmail(pessoaDTO.getEmail());
+            pessoaJuridica.setTipo(pessoaDTO.getTipo());
+            pessoaJuridica.setSituacao(pessoaDTO.getSituacao());
+
+            pessoaJuridica.setCnpj(pessoaDTO.getPessoaJuridica().getCnpj());
+            pessoaJuridica.setInscricaoEstadual(pessoaDTO.getPessoaJuridica().getInscricaoEstadual());
+            pessoaJuridica.setInscricaoMunicipal(pessoaDTO.getPessoaJuridica().getInscricaoMunicipal());
+            pessoaJuridica.setRazaoSocial(pessoaDTO.getPessoaJuridica().getRazaoSocial());
+            pessoaJuridica.setRamoAtividade(pessoaDTO.getPessoaJuridica().getRamoAtividade());
+            pessoaJuridica.setSituacaoCadastral(SituacaoCNPJ.valueOf(pessoaDTO.getPessoaJuridica().getSituacaoCadastral()));
+
             return pessoaJuridica;
+        } else {
+            throw new InvalidPessoaException("Tipo de pessoa inválido: " + pessoaDTO.getTipo());
         }
-        throw new InvalidPessoaException("Tipo de pessoa inválido: " + pessoaDTO.getTipo());
     }
 }

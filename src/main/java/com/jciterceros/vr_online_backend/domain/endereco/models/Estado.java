@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = "municipios")
 public class Estado {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -10,6 +10,8 @@ import com.jciterceros.vr_online_backend.domain.endereco.repositories.MunicipioR
 import com.jciterceros.vr_online_backend.domain.exception.DatabaseException;
 import com.jciterceros.vr_online_backend.domain.exception.ResourceNotFoundException;
 import com.jciterceros.vr_online_backend.domain.exception.handler.MethodArgumentNotValidException;
+import com.jciterceros.vr_online_backend.domain.pessoa.models.Contato;
+import com.jciterceros.vr_online_backend.domain.pessoa.repositories.ContatoRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -19,6 +21,7 @@ import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,14 +36,17 @@ public class EnderecoServiceImpl implements EnderecoService {
     private final EnderecoRepository enderecoRepository;
     private final MunicipioRepository municipioRepository;
 
+    private final ContatoRepository contatoRepository;
+
     @Autowired
     private ViaCepService viaCepService;
 
     @Autowired
-    public EnderecoServiceImpl(ModelMapper mapper, EnderecoRepository enderecoRepository, MunicipioRepository municipioRepository) {
+    public EnderecoServiceImpl(ModelMapper mapper, EnderecoRepository enderecoRepository, MunicipioRepository municipioRepository, ContatoRepository contatoRepository) {
         this.mapper = mapper;
         this.enderecoRepository = enderecoRepository;
         this.municipioRepository = municipioRepository;
+        this.contatoRepository = contatoRepository;
         configureMapper();
     }
 
@@ -83,6 +89,29 @@ public class EnderecoServiceImpl implements EnderecoService {
 
         return mapper.map(endereco, EnderecoDTO.class);
     }
+
+    @Override
+    public List<Endereco> salvarLista(Long id, List<EnderecoDTO> enderecoDTOs) {
+        List<Endereco> enderecos = new ArrayList<>();
+        for (EnderecoDTO enderecoDTO : enderecoDTOs) {
+            Endereco endereco = enderecoRepository.findById(enderecoDTO.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException(ENDERECO_NAO_ENCONTRADO + ": " + enderecoDTO.toString()));
+
+            Contato contato = contatoRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Contato não encontrado: " + id));
+
+            endereco.setContato(contato);
+            enderecos.add(endereco);
+        }
+
+        try {
+            enderecos = enderecoRepository.saveAll(enderecos);
+        } catch (DatabaseException e) {
+            throw new DatabaseException("Erro ao salvar a lista de endereços");
+        }
+        return enderecos;
+    }
+
 
     @Override
     public EnderecoDTO atualizar(Long id, EnderecoDTO enderecoDTO) {

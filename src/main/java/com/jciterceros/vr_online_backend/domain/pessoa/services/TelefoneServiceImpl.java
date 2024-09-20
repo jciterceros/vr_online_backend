@@ -3,7 +3,9 @@ package com.jciterceros.vr_online_backend.domain.pessoa.services;
 import com.jciterceros.vr_online_backend.domain.dto.pessoa.TelefoneDTO;
 import com.jciterceros.vr_online_backend.domain.exception.DatabaseException;
 import com.jciterceros.vr_online_backend.domain.exception.ResourceNotFoundException;
+import com.jciterceros.vr_online_backend.domain.pessoa.models.Contato;
 import com.jciterceros.vr_online_backend.domain.pessoa.models.Telefone;
+import com.jciterceros.vr_online_backend.domain.pessoa.repositories.ContatoRepository;
 import com.jciterceros.vr_online_backend.domain.pessoa.repositories.TelefoneRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -14,6 +16,7 @@ import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -28,10 +31,13 @@ public class TelefoneServiceImpl implements TelefoneService {
 
     private final TelefoneRepository telefoneRepository;
 
+    private final ContatoRepository contatoRepository;
+
     @Autowired
-    public TelefoneServiceImpl(ModelMapper mapper, TelefoneRepository telefoneRepository) {
+    public TelefoneServiceImpl(ModelMapper mapper, TelefoneRepository telefoneRepository, ContatoRepository contatoRepository) {
         this.mapper = mapper;
         this.telefoneRepository = telefoneRepository;
+        this.contatoRepository = contatoRepository;
     }
 
     @Override
@@ -72,6 +78,27 @@ public class TelefoneServiceImpl implements TelefoneService {
         }
 
         return mapper.map(telefone, TelefoneDTO.class);
+    }
+
+    @Override
+    public List<Telefone> salvarLista(Long id, List<TelefoneDTO> telefoneDTOs) {
+        List<Telefone> telefones = new ArrayList<>();
+        for (TelefoneDTO telefoneDTO : telefoneDTOs) {
+            Telefone telefone = telefoneRepository.findById(telefoneDTO.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException(TELEFONE_NAO_ENCONTRADO + ": " + telefoneDTO.toString()));
+
+            Contato contato = contatoRepository.findById(id)
+                    .orElseThrow(() -> new ResourceNotFoundException("Contato não encontrado: " + id));
+
+            telefone.setContato(contato);
+            telefones.add(telefone);
+        }
+        try {
+            telefones = telefoneRepository.saveAll(telefones);
+        } catch (DatabaseException e) {
+            throw new DatabaseException("Erro ao salvar lista de telefones");
+        }
+        return telefones;
     }
 
     @Override

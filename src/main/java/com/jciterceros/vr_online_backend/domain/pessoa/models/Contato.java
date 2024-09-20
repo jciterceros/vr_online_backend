@@ -2,7 +2,8 @@ package com.jciterceros.vr_online_backend.domain.pessoa.models;
 
 import com.jciterceros.vr_online_backend.domain.endereco.models.Endereco;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 

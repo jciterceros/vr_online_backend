@@ -23,9 +23,16 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Habilitar h2-console
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, "/api/user/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/h2-console/**").permitAll()
+
                         .anyRequest()
                         .authenticated()
                 ).addFilterBefore(customBasicAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

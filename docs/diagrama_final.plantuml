@@ -145,7 +145,7 @@ package "Pessoa e Contatos" {
         + setPrincipal(principal: String)
     }
 
-    class ContatoService {
+    class Contato {
         - enderecos: List<Endereco>
         - telefones: List<Telefone>
         + adicionarEndereco(endereco: Endereco)
@@ -157,11 +157,8 @@ package "Pessoa e Contatos" {
     }
 
     enum TipoPessoa {
-        CLIENTE
-        FORNECEDOR
-        REPRESENTANTE
-        FUNCIONARIO
-        ADMINISTRADOR
+        FISICA
+        JURIDICA
     }
 
 
@@ -176,13 +173,13 @@ package "Pessoa e Contatos" {
         - id: Long
         - nome: String
         - tipo: TipoPessoa
-        - contatoService: ContatoService
+        - contatoService: Contato
         - email: String
         - situacao: SituacaoCPF
         + getId(): Long
         + getNome(): String
         + getTipo(): TipoPessoa
-        + getContatoService(): ContatoService
+        + getContatoService(): Contato
         + getEmail(): String
         + getSituacao(): SituacaoCPF
         + setId(id: Long)
@@ -588,9 +585,9 @@ Endereco "1" --> "0..*" Municipio : "Está localizado em"
 EnderecoViaCepAdapter --> ViaCep : "Recebe dados de"
 
 ' Adiciona a composição ou agregação onde for necessário
-Pessoa "1" *-- "1" ContatoService : "Gerencia Contatos"
-ContatoService "1" *-- "0..*" Endereco : "Gerencia"
-ContatoService "1" *-- "0..*" Telefone : "Gerencia"
+Pessoa "1" *-- "1" Contato : "Gerencia Contatos"
+Contato "1" *-- "0..*" Endereco : "Gerencia"
+Contato "1" *-- "0..*" Telefone : "Gerencia"
 
 ' Atualiza a relação entre Pessoa e ContatoService para composição
 Pessoa "1" *-- "0..*" Endereco : "Tem"

@@ -6,12 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "item_pedido")
+@Table(name = "tb_item_pedido")
 public class ItemPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class ItemPedido {
 
     private BigDecimal quantidade;
     private BigDecimal valorAtualProduto;
-    private Date dataPedido;
+    private LocalDate dataPedido;
     private BigDecimal subTotal;
 
     @ManyToOne(fetch = FetchType.LAZY)

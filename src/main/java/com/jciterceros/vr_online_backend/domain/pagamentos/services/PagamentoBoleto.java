@@ -10,7 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "pagamento_boleto")
+@Table(name = "tb_pagamento_boleto")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,16 +22,19 @@ public class PagamentoBoleto implements IPagamentoProcessar, IPagamentoValidar, 
     @Override
     public void processarPagamento(Pagamento pagamento) {
         // Implementação específica para Boleto
+        System.out.println("Processando pagamento via boleto...");
     }
 
     @Override
     public boolean validarPagamento(Pagamento pagamento) {
         // Implementação específica para Boleto
+        System.out.println("Validando pagamento via boleto...");
         return true;
     }
 
     @Override
     public void notificarStatus(Pagamento pagamento) {
         // Implementação específica para Boleto
+        System.out.println("Notificando status do pagamento via boleto...");
     }
 }

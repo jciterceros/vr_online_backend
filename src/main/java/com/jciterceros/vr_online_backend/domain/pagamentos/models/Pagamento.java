@@ -8,10 +8,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "pagamento")
+@Table(name = "tb_pagamento")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -25,14 +25,14 @@ public class Pagamento {
 
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)
-    private Date data;
+    private LocalDate data;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusPagamento status;
 
     @Temporal(TemporalType.DATE)
-    private Date dataConfirmacao;
+    private LocalDate dataConfirmacao;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -54,8 +54,14 @@ public class Pagamento {
     private IPagamentoNotificar notificar;
 
     public void processar() {
-        if (processar != null) {
+        if (validar.validarPagamento(this)) {
             processar.processarPagamento(this);
+            this.status = StatusPagamento.CONFIRMADO;
+            this.dataConfirmacao = LocalDate.now();
+            notificar.notificarStatus(this);
+        } else {
+            this.status = StatusPagamento.CANCELADO;
+            System.out.println("Pagamento inválido.");
         }
     }
 }

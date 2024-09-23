@@ -8,11 +8,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "pedido_compra")
+@Table(name = "tb_pedido_compra")
 @Data
 @NoArgsConstructor
 public class PedidoCompra {
@@ -32,13 +32,13 @@ public class PedidoCompra {
     private List<ItemPedido> itens;
 
     private BigDecimal valorTotal;
-    private Date dataPedido;
+    private LocalDate dataPedido;
 
     @OneToOne
     @JoinColumn(name = "pagamento_id")
     private Pagamento pagamento;
 
-    private Date dataEntrega;
+    private LocalDate dataEntrega;
 
     @ManyToOne
     @JoinColumn(name = "local_entrega_id")

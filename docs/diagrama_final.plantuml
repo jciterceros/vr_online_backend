@@ -578,20 +578,15 @@ package "Segurança" {
 
 ' Relacionamentos
 
-Estado "1" -- "0..*" Municipio: "Tem"
-Municipio "1" -- "0..*" Estado : "Pertence a"
-Endereco "1" --> "0..*" Municipio : "Está localizado em"
+Estado "1" -- "0..*" Municipio: "Possui"
+Endereco "0..1" --> "1" Municipio : "Pertence"
 
 EnderecoViaCepAdapter --> ViaCep : "Recebe dados de"
 
 ' Adiciona a composição ou agregação onde for necessário
-Pessoa "1" *-- "1" Contato : "Gerencia Contatos"
+Pessoa "1" o-- "0..1" Contato : "Gerencia Contatos"
 Contato "1" *-- "0..*" Endereco : "Gerencia"
 Contato "1" *-- "0..*" Telefone : "Gerencia"
-
-' Atualiza a relação entre Pessoa e ContatoService para composição
-Pessoa "1" *-- "0..*" Endereco : "Tem"
-Pessoa "1" *-- "0..*" Telefone : "Tem"
 
 ' Atualiza a herança para refletir a abstração de Pessoa
 
@@ -600,19 +595,19 @@ PessoaFactory ..> PessoaJuridica : "Cria"
 Pessoa ..|> PessoaFisica : "Herda"
 Pessoa ..|> PessoaJuridica : "Herda"
 
-Produto "1" -- "0..*" Estoque : "Possui"
-Estoque "1" -- "1" LocalArmazenamento : "Armazenado em"
+Produto "1" --> "0..*" Estoque : "Em estoque"
+Estoque "1" --> "1" LocalArmazenamento : "Armazenado em"
 
 ItemPedido "1" -- "1" Produto : "Refere-se"
 PedidoVenda "1" -- "0..*" ItemPedido : "Contém"
 PedidoCompra "1" -- "0..*" ItemPedido : "Contém"
 
-PedidoVenda "1" -- "1" Pessoa : "Cliente"
-PedidoVenda "1" -- "1" Endereco : "Entrega"
+PedidoVenda "1" --> "1" Pessoa : "Cliente"
+PedidoCompra "1" --> "1" Pessoa : "Comprador"
+PedidoCompra "1" --> "1" Pessoa : "Fornecedor"
 
-PedidoCompra "1" -- "1" Pessoa : "Fornecedor"
-PedidoCompra "1" -- "1" Endereco : "Entrega"
-PedidoCompra "1" -- "1" Pessoa : "Comprador"
+PedidoVenda "1" -- "1" Contato : "Endereco de Entrega"
+PedidoCompra "1" -- "1" Contato : "Endereco de Entrega"
 
 Pagamento "1" -- "1" PedidoVenda : "Relacionado a"
 Pagamento "1" -- "1" PedidoCompra : "Relacionado a"
@@ -622,7 +617,7 @@ Pagamento ..> IPagamentoValidar : "Utiliza para validar"
 Pagamento ..> IPagamentoNotificar : "Utiliza para notificar"
 
 User --> Pessoa : "Composição"
-User "1" -- "0..*" Role : "Tem"
+User "1" --> "0..*" Role : "Tem papéis"
 UserServiceImpl --> UserRepository : "Usa"
 UserServiceImpl --> UserDetailsService : "Implementa"
 UserPrincipal --> User : "Associação"

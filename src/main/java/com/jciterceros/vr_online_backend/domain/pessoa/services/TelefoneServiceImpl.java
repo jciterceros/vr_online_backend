@@ -82,22 +82,31 @@ public class TelefoneServiceImpl implements TelefoneService {
 
     @Override
     public List<Telefone> salvarLista(Long id, List<TelefoneDTO> telefoneDTOs) {
+        if (telefoneDTOs == null) {
+            throw new IllegalArgumentException("A lista de telefones não pode ser nula");
+        }
+
+        Contato contato = contatoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Contato não encontrado: " + id));
+
         List<Telefone> telefones = new ArrayList<>();
+
         for (TelefoneDTO telefoneDTO : telefoneDTOs) {
+
             Telefone telefone = telefoneRepository.findById(telefoneDTO.getId())
                     .orElseThrow(() -> new ResourceNotFoundException(TELEFONE_NAO_ENCONTRADO + ": " + telefoneDTO.toString()));
 
-            Contato contato = contatoRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Contato não encontrado: " + id));
-
             telefone.setContato(contato);
+
+            try {
+                telefoneRepository.save(telefone);
+            } catch (DatabaseException e) {
+                throw new DatabaseException("Erro ao salvar lista de telefones");
+            }
+
             telefones.add(telefone);
         }
-        try {
-            telefones = telefoneRepository.saveAll(telefones);
-        } catch (DatabaseException e) {
-            throw new DatabaseException("Erro ao salvar lista de telefones");
-        }
+
         return telefones;
     }
 
@@ -128,6 +137,14 @@ public class TelefoneServiceImpl implements TelefoneService {
             throw new DatabaseException(TELEFONE_NAO_ENCONTRADO);
         }
         telefoneRepository.deleteById(id);
+    }
+
+    @Override
+    public void excluirLista(Long id) {
+        Contato contato = contatoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Contato não encontrado: " + id));
+
+        telefoneRepository.deleteAll(contato.getTelefones());
     }
 
     public void configureMapper() {

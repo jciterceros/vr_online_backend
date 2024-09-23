@@ -2,6 +2,7 @@ package com.jciterceros.vr_online_backend.domain.pessoa.services;
 
 import com.jciterceros.vr_online_backend.domain.dto.endereco.EnderecoDTO;
 import com.jciterceros.vr_online_backend.domain.dto.pessoa.ContatoDTO;
+import com.jciterceros.vr_online_backend.domain.dto.pessoa.PessoaDTO;
 import com.jciterceros.vr_online_backend.domain.dto.pessoa.TelefoneDTO;
 import com.jciterceros.vr_online_backend.domain.endereco.models.Endereco;
 import com.jciterceros.vr_online_backend.domain.endereco.repositories.EnderecoRepository;
@@ -14,6 +15,7 @@ import com.jciterceros.vr_online_backend.domain.pessoa.models.Telefone;
 import com.jciterceros.vr_online_backend.domain.pessoa.repositories.ContatoRepository;
 import com.jciterceros.vr_online_backend.domain.pessoa.repositories.PessoaRepository;
 import com.jciterceros.vr_online_backend.domain.pessoa.repositories.TelefoneRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -25,12 +27,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class ContatoServiceImpl implements ContatoService {
 
     public static final String CONTATO_NAO_ENCONTRADO = "Contato não encontrado";
+    public static final String PESSOA_NAO_ENCONTRADA = "Pessoa não encontrada";
     private final ModelMapper mapper;
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
@@ -77,28 +79,51 @@ public class ContatoServiceImpl implements ContatoService {
                             .map(endereco -> enderecoRepository.findById(endereco.getId())
                                     .map(e -> mapper.map(e, EnderecoDTO.class))
                                     .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado: " + endereco.getId())))
-                            .collect(Collectors.toList());
+                            .toList();
                     contatoDTO.setEnderecos(enderecosDTO);
 
                     List<TelefoneDTO> telefonesDTO = contato.getTelefones().stream()
                             .map(telefone -> telefoneRepository.findById(telefone.getId())
                                     .map(t -> mapper.map(t, TelefoneDTO.class))
                                     .orElseThrow(() -> new ResourceNotFoundException("Telefone não encontrado: " + telefone.getId())))
-                            .collect(Collectors.toList());
+                            .toList();
                     contatoDTO.setTelefones(telefonesDTO);
+
+                    Pessoa pessoa = pessoaRepository.findById(contato.getPessoa().getId())
+                            .orElseThrow(() -> new ResourceNotFoundException(PESSOA_NAO_ENCONTRADA));
+                    contatoDTO.setPessoa(mapper.map(pessoa, PessoaDTO.class));
 
                     return contatoDTO;
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public Optional<ContatoDTO> buscarPorId(Long id) {
-        if (!contatoRepository.existsById(id)) {
-            throw new ResourceNotFoundException(CONTATO_NAO_ENCONTRADO);
-        }
         return contatoRepository.findById(id)
-                .map(contato -> mapper.map(contato, ContatoDTO.class));
+                .map(contato -> {
+                    ContatoDTO contatoDTO = mapper.map(contato, ContatoDTO.class);
+
+                    List<EnderecoDTO> enderecosDTO = contato.getEnderecos().stream()
+                            .map(endereco -> enderecoRepository.findById(endereco.getId())
+                                    .map(e -> mapper.map(e, EnderecoDTO.class))
+                                    .orElseThrow(() -> new ResourceNotFoundException("Endereço não encontrado: " + endereco.getId())))
+                            .toList();
+                    contatoDTO.setEnderecos(enderecosDTO);
+
+                    List<TelefoneDTO> telefonesDTO = contato.getTelefones().stream()
+                            .map(telefone -> telefoneRepository.findById(telefone.getId())
+                                    .map(t -> mapper.map(t, TelefoneDTO.class))
+                                    .orElseThrow(() -> new ResourceNotFoundException("Telefone não encontrado: " + telefone.getId())))
+                            .toList();
+                    contatoDTO.setTelefones(telefonesDTO);
+
+                    Pessoa pessoa = pessoaRepository.findById(contato.getPessoa().getId())
+                            .orElseThrow(() -> new ResourceNotFoundException(PESSOA_NAO_ENCONTRADA));
+                    contatoDTO.setPessoa(mapper.map(pessoa, PessoaDTO.class));
+
+                    return contatoDTO;
+                });
     }
 
     @Override
@@ -109,15 +134,52 @@ public class ContatoServiceImpl implements ContatoService {
         }
 
         Pessoa pessoa = pessoaRepository.findById(contatoDTO.getPessoa().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Pessoa não encontrada"));
+                .orElseThrow(() -> new ResourceNotFoundException(PESSOA_NAO_ENCONTRADA));
 
         Contato contato = mapper.map(contatoDTO, Contato.class);
+        contato.setPessoa(pessoa);
+        contato.setTelefones(null);
+        contato.setEnderecos(null);
+
+        try {
+            contato = contatoRepository.save(contato);
+        } catch (Exception e) {
+            throw new DatabaseException("Erro ao salvar contato: " + e.getMessage());
+        }
+
+        List<Endereco> enderecos = enderecoService.salvarLista(contato.getId(), contatoDTO.getEnderecos());
+        List<Telefone> telefones = telefoneService.salvarLista(contato.getId(), contatoDTO.getTelefones());
+
+        contato.setEnderecos(enderecos);
+        contato.setTelefones(telefones);
+
+        return mapper.map(contato, ContatoDTO.class);
+    }
+
+    @Transactional
+    @Override
+    public ContatoDTO atualizar(Long id, ContatoDTO contatoDTO) {
+        String error = validateFields(contatoDTO);
+        if (error != null) {
+            throw new DatabaseException(error);
+        }
+
+        if (!contatoRepository.existsById(id)) {
+            throw new ResourceNotFoundException(CONTATO_NAO_ENCONTRADO);
+        }
+
+        Pessoa pessoa = pessoaRepository.findById(contatoDTO.getPessoa().getId())
+                .orElseThrow(() -> new ResourceNotFoundException(PESSOA_NAO_ENCONTRADA));
+        pessoa = pessoaRepository.save(pessoa);
+
+        Contato contato = mapper.map(contatoDTO, Contato.class);
+        contato.setId(id);
         contato.setPessoa(pessoa);
 
         try {
             contato = contatoRepository.save(contato);
         } catch (Exception e) {
-            throw new DatabaseException("Erro ao salvar contato");
+            throw new DatabaseException("Erro ao atualizar contato");
         }
 
         List<Endereco> enderecos = enderecoService.salvarLista(contato.getId(), contatoDTO.getEnderecos());
@@ -130,33 +192,11 @@ public class ContatoServiceImpl implements ContatoService {
     }
 
     @Override
-    public ContatoDTO atualizar(Long id, ContatoDTO contatoDTO) {
-        String error = validateFields(contatoDTO);
-        if (error != null) {
-            throw new DatabaseException(error);
-        }
-
-        if (!contatoRepository.existsById(id)) {
-            throw new ResourceNotFoundException(CONTATO_NAO_ENCONTRADO);
-        }
-
-        Contato contato = mapper.map(contatoDTO, Contato.class);
-        contato.setId(id);
-
-        try {
-            contato = contatoRepository.save(contato);
-        } catch (Exception e) {
-            throw new DatabaseException("Erro ao atualizar contato");
-        }
-
-        return mapper.map(contato, ContatoDTO.class);
-    }
-
-    @Override
     public void deletar(Long id) {
         if (!contatoRepository.existsById(id)) {
             throw new ResourceNotFoundException(CONTATO_NAO_ENCONTRADO);
         }
+
         contatoRepository.deleteById(id);
     }
 }

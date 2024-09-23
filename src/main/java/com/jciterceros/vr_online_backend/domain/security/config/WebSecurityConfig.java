@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class WebSecurityConfig {
 
+    public static final String H_2_CONSOLE = "/h2-console/**";
     private final CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
 
     @Bean
@@ -25,13 +26,12 @@ public class WebSecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // Habilitar h2-console
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(HttpMethod.POST, "/api/user/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/h2-console/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/h2-console/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, H_2_CONSOLE).permitAll()
+                        .requestMatchers(HttpMethod.POST, H_2_CONSOLE).permitAll()
+                        .requestMatchers(HttpMethod.PUT, H_2_CONSOLE).permitAll()
+                        .requestMatchers(HttpMethod.DELETE, H_2_CONSOLE).permitAll()
 
                         .anyRequest()
                         .authenticated()

@@ -20,4 +20,6 @@ public interface TelefoneService {
     TelefoneDTO atualizar(Long id, TelefoneDTO telefoneDTO);
 
     void deletar(Long id);
+
+    void excluirLista(Long id);
 }

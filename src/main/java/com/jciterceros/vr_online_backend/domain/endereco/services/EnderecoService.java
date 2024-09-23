@@ -25,4 +25,6 @@ public interface EnderecoService {
     MunicipioDTO buscarMunicipioPorId(Long id);
 
     void deletar(Long id);
+
+    void excluirLista(Long id);
 }

@@ -92,13 +92,13 @@ public class EnderecoServiceImpl implements EnderecoService {
 
     @Override
     public List<Endereco> salvarLista(Long id, List<EnderecoDTO> enderecoDTOs) {
+        Contato contato = contatoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Contato não encontrado: " + id));
+
         List<Endereco> enderecos = new ArrayList<>();
         for (EnderecoDTO enderecoDTO : enderecoDTOs) {
             Endereco endereco = enderecoRepository.findById(enderecoDTO.getId())
                     .orElseThrow(() -> new ResourceNotFoundException(ENDERECO_NAO_ENCONTRADO + ": " + enderecoDTO.toString()));
-
-            Contato contato = contatoRepository.findById(id)
-                    .orElseThrow(() -> new ResourceNotFoundException("Contato não encontrado: " + id));
 
             endereco.setContato(contato);
             enderecos.add(endereco);
@@ -111,7 +111,6 @@ public class EnderecoServiceImpl implements EnderecoService {
         }
         return enderecos;
     }
-
 
     @Override
     public EnderecoDTO atualizar(Long id, EnderecoDTO enderecoDTO) {
@@ -165,6 +164,14 @@ public class EnderecoServiceImpl implements EnderecoService {
             throw new ResourceNotFoundException(ENDERECO_NAO_ENCONTRADO);
         }
         enderecoRepository.deleteById(id);
+    }
+
+    @Override
+    public void excluirLista(Long id) {
+        Contato contato = contatoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Contato não encontrado: " + id));
+
+        enderecoRepository.deleteAll(contato.getEnderecos());
     }
 
     public void configureMapper() {

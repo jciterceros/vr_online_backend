@@ -1,8 +1,11 @@
 package com.jciterceros.vr_online_backend.domain.endereco.models;
 
 import com.jciterceros.vr_online_backend.domain.pessoa.models.Contato;
+import com.jciterceros.vr_online_backend.domain.produtos.models.LocalArmazenamento;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "tb_endereco")
@@ -26,7 +29,10 @@ public class Endereco implements IEndereco {
     @JoinColumn(name = "municipio_id")
     private Municipio municipio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "contato_id")
     private Contato contato;
+
+    @OneToMany(mappedBy = "endereco", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<LocalArmazenamento> locaisArmazenamento;
 }

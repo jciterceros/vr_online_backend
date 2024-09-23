@@ -5,6 +5,7 @@ import com.jciterceros.vr_online_backend.domain.exception.DatabaseException;
 import com.jciterceros.vr_online_backend.domain.exception.ResourceNotFoundException;
 import com.jciterceros.vr_online_backend.domain.pessoa.models.Pessoa;
 import com.jciterceros.vr_online_backend.domain.pessoa.repositories.PessoaRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;

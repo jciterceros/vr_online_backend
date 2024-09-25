@@ -1,10 +1,11 @@
-package com.jciterceros.vr_online_backend.domain.pagamentos.services;
+package com.jciterceros.vr_online_backend.domain.pagamentos.services.implementations;
 
 import com.jciterceros.vr_online_backend.domain.dto.pagamento.PagamentoDTO;
 import com.jciterceros.vr_online_backend.domain.exception.DatabaseException;
 import com.jciterceros.vr_online_backend.domain.exception.ResourceNotFoundException;
 import com.jciterceros.vr_online_backend.domain.pagamentos.models.Pagamento;
 import com.jciterceros.vr_online_backend.domain.pagamentos.repositories.PagamentoRepository;
+import com.jciterceros.vr_online_backend.domain.pagamentos.services.PagamentoService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -26,6 +27,9 @@ public class PagamentoServiceImpl implements PagamentoService {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
     private final PagamentoRepository pagamentoRepository;
+
+    @Autowired
+    private PagamentoProcessamentoService pagamentoProcessamentoService;
 
     @Autowired
     public PagamentoServiceImpl(ModelMapper mapper, PagamentoRepository pagamentoRepository) {
@@ -65,6 +69,10 @@ public class PagamentoServiceImpl implements PagamentoService {
         }
 
         Pagamento pagamento = mapper.map(pagamentoDTO, Pagamento.class);
+
+        // Processa o pagamento
+        pagamentoProcessamentoService.processarPagamento(pagamento);
+
         try {
             pagamento = pagamentoRepository.save(pagamento);
         } catch (Exception e) {
@@ -103,6 +111,16 @@ public class PagamentoServiceImpl implements PagamentoService {
         }
         pagamentoRepository.deleteById(id);
     }
+
+    @Override
+    public void processarPagamento(PagamentoDTO pagamentoDTO) {
+        // Converte o DTO para a entidade Pagamento
+        Pagamento pagamento = mapper.map(pagamentoDTO, Pagamento.class);
+
+        // Processa o pagamento
+        pagamentoProcessamentoService.processarPagamento(pagamento);
+    }
+
 
     public void configureMapper() {
         mapper.addMappings(new PropertyMap<PagamentoDTO, Pagamento>() {

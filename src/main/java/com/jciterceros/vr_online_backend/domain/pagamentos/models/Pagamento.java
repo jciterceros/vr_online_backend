@@ -1,5 +1,7 @@
 package com.jciterceros.vr_online_backend.domain.pagamentos.models;
 
+import com.jciterceros.vr_online_backend.domain.pagamentos.models.enums.StatusPagamento;
+import com.jciterceros.vr_online_backend.domain.pagamentos.models.enums.TipoPagamento;
 import com.jciterceros.vr_online_backend.domain.pedidos.models.PedidoCompra;
 import com.jciterceros.vr_online_backend.domain.pedidos.models.PedidoVenda;
 import jakarta.persistence.*;
@@ -24,14 +26,14 @@ public class Pagamento {
     private BigDecimal valor;
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
+//    @Temporal(TemporalType.DATE)
     private LocalDate data;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusPagamento status;
 
-    @Temporal(TemporalType.DATE)
+    //    @Temporal(TemporalType.DATE)
     private LocalDate dataConfirmacao;
 
     @Enumerated(EnumType.STRING)
@@ -43,25 +45,5 @@ public class Pagamento {
 
     @OneToOne(mappedBy = "pagamento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PedidoCompra pedidoCompra;
-
-    @Transient
-    private IPagamentoProcessar processar;
-
-    @Transient
-    private IPagamentoValidar validar;
-
-    @Transient
-    private IPagamentoNotificar notificar;
-
-    public void processar() {
-        if (validar.validarPagamento(this)) {
-            processar.processarPagamento(this);
-            this.status = StatusPagamento.CONFIRMADO;
-            this.dataConfirmacao = LocalDate.now();
-            notificar.notificarStatus(this);
-        } else {
-            this.status = StatusPagamento.CANCELADO;
-            System.out.println("Pagamento inválido.");
-        }
-    }
+    
 }

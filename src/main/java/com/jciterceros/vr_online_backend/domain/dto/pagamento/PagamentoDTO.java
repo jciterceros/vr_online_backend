@@ -1,7 +1,7 @@
 package com.jciterceros.vr_online_backend.domain.dto.pagamento;
 
-import com.jciterceros.vr_online_backend.domain.pagamentos.models.StatusPagamento;
-import com.jciterceros.vr_online_backend.domain.pagamentos.models.TipoPagamento;
+import com.jciterceros.vr_online_backend.domain.pagamentos.models.enums.StatusPagamento;
+import com.jciterceros.vr_online_backend.domain.pagamentos.models.enums.TipoPagamento;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;

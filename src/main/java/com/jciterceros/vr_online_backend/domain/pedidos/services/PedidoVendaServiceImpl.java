@@ -4,12 +4,11 @@ package com.jciterceros.vr_online_backend.domain.pedidos.services;
 import com.jciterceros.vr_online_backend.domain.dto.pedido.PedidoVendaDTO;
 import com.jciterceros.vr_online_backend.domain.exception.DatabaseException;
 import com.jciterceros.vr_online_backend.domain.exception.ResourceNotFoundException;
+import com.jciterceros.vr_online_backend.domain.pagamentos.factories.PagamentoProcessarFactory;
 import com.jciterceros.vr_online_backend.domain.pagamentos.models.Pagamento;
+import com.jciterceros.vr_online_backend.domain.pagamentos.models.interfaces.IPagamentoProcessar;
 import com.jciterceros.vr_online_backend.domain.pagamentos.repositories.PagamentoRepository;
-import com.jciterceros.vr_online_backend.domain.pagamentos.services.PagamentoBitcoins;
-import com.jciterceros.vr_online_backend.domain.pagamentos.services.PagamentoBoleto;
-import com.jciterceros.vr_online_backend.domain.pagamentos.services.PagamentoCartao;
-import com.jciterceros.vr_online_backend.domain.pagamentos.services.PagamentoPIX;
+import com.jciterceros.vr_online_backend.domain.pagamentos.services.implementations.PagamentoProcessamentoService;
 import com.jciterceros.vr_online_backend.domain.pedidos.models.PedidoVenda;
 import com.jciterceros.vr_online_backend.domain.pedidos.repositories.PedidoVendaRepository;
 import jakarta.validation.ConstraintViolation;
@@ -36,11 +35,17 @@ public class PedidoVendaServiceImpl implements PedidoVendaService {
 
     private final PagamentoRepository pagamentoRepository;
 
+    private final PagamentoProcessamentoService pagamentoProcessamentoService;
+
     @Autowired
-    public PedidoVendaServiceImpl(ModelMapper mapper, PedidoVendaRepository pedidoVendaRepository, PagamentoRepository pagamentoRepository) {
+    private PagamentoProcessarFactory pagamentoProcessarFactory;
+
+    @Autowired
+    public PedidoVendaServiceImpl(ModelMapper mapper, PedidoVendaRepository pedidoVendaRepository, PagamentoRepository pagamentoRepository, PagamentoProcessamentoService pagamentoProcessamentoService) {
         this.mapper = mapper;
         this.pedidoVendaRepository = pedidoVendaRepository;
         this.pagamentoRepository = pagamentoRepository;
+        this.pagamentoProcessamentoService = pagamentoProcessamentoService;
         configureMapper();
     }
 
@@ -74,30 +79,20 @@ public class PedidoVendaServiceImpl implements PedidoVendaService {
             throw new DatabaseException(error);
         }
 
-        // Buscando o pagamento pelo ID
-        Pagamento pagamento = pagamentoRepository.findById(pedidoVendaDTO.getPagamentoId())
-                .orElseThrow(() -> new ResourceNotFoundException("Pagamento não encontrado"));
+        // Criar um Novo Pagamento
+        Pagamento pagamento = new Pagamento();
+        pagamento.setTipoPagamento(pedidoVendaDTO.getTipoPagamento());
+        pagamento.setValor(pedidoVendaDTO.getValorTotal()); // Supondo que o valor total do pedido seja o valor do pagamento
 
-        // Criando a estratégia de pagamento
-        switch (pagamento.getTipoPagamento()) {
-            case PIX:
-                pagamento.setProcessar(new PagamentoPIX());
-                break;
-            case BOLETO:
-                pagamento.setProcessar(new PagamentoBoleto());
-                break;
-            case CARTAO:
-                pagamento.setProcessar(new PagamentoCartao());
-                break;
-            case BITCOINS:
-                pagamento.setProcessar(new PagamentoBitcoins());
-                break;
-            default:
-                throw new IllegalArgumentException("Tipo de pagamento inválido");
-        }
+        // Obtém a estratégia de processamento de pagamento correta e processa o pagamento
+        IPagamentoProcessar processar = pagamentoProcessarFactory.getPagamentoProcessar(pagamento.getTipoPagamento());
+        processar.processarPagamento(pagamento);
 
         // Processando o pagamento
-        pagamento.processar();
+        pagamentoProcessamentoService.processarPagamento(pagamento);
+
+        // Persiste o pagamento no banco de dados
+        pagamento = pagamentoRepository.save(pagamento);
 
         PedidoVenda pedidoVenda = mapper.map(pedidoVendaDTO, PedidoVenda.class);
         pedidoVenda.setPagamento(pagamento); // Adicionando o pagamento ao pedido de venda

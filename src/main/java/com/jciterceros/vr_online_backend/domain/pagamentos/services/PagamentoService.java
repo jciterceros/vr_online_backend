@@ -17,4 +17,7 @@ public interface PagamentoService {
     PagamentoDTO atualizar(Long id, PagamentoDTO pagamentoDTO);
 
     void deletar(Long id);
+
+    // Novo método para processar o pagamento
+    void processarPagamento(PagamentoDTO pagamentoDTO);
 }

@@ -1,23 +1,13 @@
-package com.jciterceros.vr_online_backend.domain.pagamentos.services;
+package com.jciterceros.vr_online_backend.domain.pagamentos.services.implementations;
 
-import com.jciterceros.vr_online_backend.domain.pagamentos.models.IPagamentoNotificar;
-import com.jciterceros.vr_online_backend.domain.pagamentos.models.IPagamentoProcessar;
-import com.jciterceros.vr_online_backend.domain.pagamentos.models.IPagamentoValidar;
 import com.jciterceros.vr_online_backend.domain.pagamentos.models.Pagamento;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.jciterceros.vr_online_backend.domain.pagamentos.models.interfaces.IPagamentoNotificar;
+import com.jciterceros.vr_online_backend.domain.pagamentos.models.interfaces.IPagamentoProcessar;
+import com.jciterceros.vr_online_backend.domain.pagamentos.models.interfaces.IPagamentoValidar;
+import org.springframework.stereotype.Service;
 
-@Entity
-@Table(name = "tb_pagamento_boleto")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Service
 public class PagamentoBoleto implements IPagamentoProcessar, IPagamentoValidar, IPagamentoNotificar {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Override
     public void processarPagamento(Pagamento pagamento) {

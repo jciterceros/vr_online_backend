@@ -16,5 +16,13 @@ public interface ItemPedidoService {
 
     ItemPedidoDTO atualizar(Long id, ItemPedidoDTO itemPedidoDTO);
 
+    ItemPedidoDTO adicionarPedidoCompra(Long id, Long pedidoCompraId);
+
+    ItemPedidoDTO adicionarPedidoVenda(Long id, Long pedidoVendaId);
+
+    ItemPedidoDTO removerPedidoCompra(Long id);
+
+    ItemPedidoDTO removerPedidoVenda(Long id);
+
     void deletar(Long id);
 }

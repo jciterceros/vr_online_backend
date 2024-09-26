@@ -1,7 +1,7 @@
 package com.jciterceros.vr_online_backend.domain.pedidos.controllers;
 
 import com.jciterceros.vr_online_backend.domain.dto.pedido.ItemPedidoDTO;
-import com.jciterceros.vr_online_backend.domain.pedidos.services.ItemPedidoService;
+import com.jciterceros.vr_online_backend.domain.pedidos.services.ItemPedidoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +13,10 @@ import java.util.Optional;
 @RequestMapping("/api/pedidos/itens")
 public class ItemPedidoController {
 
-    private final ItemPedidoService itemPedidoService;
+    private final ItemPedidoServiceImpl itemPedidoService;
 
     @Autowired
-    public ItemPedidoController(ItemPedidoService itemPedidoService) {
+    public ItemPedidoController(ItemPedidoServiceImpl itemPedidoService) {
         this.itemPedidoService = itemPedidoService;
     }
 

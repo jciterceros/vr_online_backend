@@ -1,5 +1,6 @@
 package com.jciterceros.vr_online_backend.domain.dto.pedido;
 
+import com.jciterceros.vr_online_backend.domain.dto.produto.ProdutoDTO;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class ItemPedidoDTO {
     private Long id;
 
     @NotNull(message = "Produto é obrigatório")
-    private Long produtoId;
+    private ProdutoDTO produto;
 
     @NotNull(message = "Quantidade é obrigatória")
     private BigDecimal quantidade;

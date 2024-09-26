@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class Pagamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,14 +28,12 @@ public class Pagamento {
     private BigDecimal valor;
 
     @Column(nullable = false)
-//    @Temporal(TemporalType.DATE)
     private LocalDate data;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusPagamento status;
 
-    //    @Temporal(TemporalType.DATE)
     private LocalDate dataConfirmacao;
 
     @Enumerated(EnumType.STRING)
@@ -45,5 +45,5 @@ public class Pagamento {
 
     @OneToOne(mappedBy = "pagamento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private PedidoCompra pedidoCompra;
-    
+
 }

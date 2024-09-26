@@ -9,15 +9,23 @@ import com.jciterceros.vr_online_backend.domain.pagamentos.models.interfaces.IPa
 import com.jciterceros.vr_online_backend.domain.pagamentos.models.interfaces.IPagamentoProcessar;
 import com.jciterceros.vr_online_backend.domain.pagamentos.models.interfaces.IPagamentoValidar;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
 @Service
 public class PagamentoProcessamentoService {
-    private PagamentoValidarFactory pagamentoValidarFactory;
-    private PagamentoProcessarFactory pagamentoProcessarFactory;
-    private PagamentoNotificarFactory pagamentoNotificarFactory;
+    private final PagamentoValidarFactory pagamentoValidarFactory;
+    private final PagamentoProcessarFactory pagamentoProcessarFactory;
+    private final PagamentoNotificarFactory pagamentoNotificarFactory;
+
+    @Autowired
+    public PagamentoProcessamentoService(PagamentoValidarFactory pagamentoValidarFactory, PagamentoProcessarFactory pagamentoProcessarFactory, PagamentoNotificarFactory pagamentoNotificarFactory) {
+        this.pagamentoValidarFactory = pagamentoValidarFactory;
+        this.pagamentoProcessarFactory = pagamentoProcessarFactory;
+        this.pagamentoNotificarFactory = pagamentoNotificarFactory;
+    }
 
     @Transactional
     public void processarPagamento(Pagamento pagamento) {

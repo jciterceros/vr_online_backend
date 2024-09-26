@@ -309,7 +309,7 @@ package "Produtos e Estoque" {
         + setLocalArmazenamento(localArmazenamento: LocalArmazenamento)
     }
 }
-' Classes e interfaces relacionadas a Pagamento
+
 package "Pagamentos" {
     enum TipoPagamento {
         PIX
@@ -331,9 +331,6 @@ package "Pagamentos" {
         - status: StatusPagamento
         - dataConfirmacao: Date
         - tipoPagamento: TipoPagamento
-        - processar: IPagamentoProcessar
-        - validar: IPagamentoValidar
-        - notificar: IPagamentoNotificar
         + getId(): Long
         + getValor(): Decimal
         + getData(): Date
@@ -345,13 +342,8 @@ package "Pagamentos" {
         + setStatus(status: StatusPagamento)
         + setDataConfirmacao(dataConfirmacao: Date)
         + setTipoPagamento(tipoPagamento: TipoPagamento)
-        + setProcessar(processar: IPagamentoProcessar)
-        + setValidar(validar: IPagamentoValidar)
-        + setNotificar(notificar: IPagamentoNotificar)
-        + processar()
     }
 
-    ' Segregacao de Interfaces para as Estratégias de Pagamento
     interface IPagamentoProcessar {
         + processarPagamento(pagamento: Pagamento)
     }
@@ -386,6 +378,30 @@ package "Pagamentos" {
         + processarPagamento(pagamento: Pagamento)
         + validarPagamento(pagamento: Pagamento): Boolean
         + notificarStatus(pagamento: Pagamento)
+    }
+
+    class PagamentoValidarFactory {
+        + getPagamentoValidar(tipoPagamento: TipoPagamento): IPagamentoValidar
+    }
+
+    class PagamentoProcessarFactory {
+        + getPagamentoProcessar(tipoPagamento: TipoPagamento): IPagamentoProcessar
+    }
+
+    class PagamentoNotificarFactory {
+        + getPagamentoNotificar(tipoPagamento: TipoPagamento): IPagamentoNotificar
+    }
+
+    class PagamentoProcessamentoService {
+        + processarPagamento(pagamento: Pagamento)
+    }
+
+    interface PagamentoService {
+        + processarPagamento(pagamentoDTO: PagamentoDTO)
+    }
+
+    class PagamentoServiceImpl implements PagamentoService {
+        + processarPagamento(pagamentoDTO: PagamentoDTO)
     }
 }
 
@@ -609,12 +625,22 @@ PedidoCompra "1" --> "1" Pessoa : "Fornecedor"
 PedidoVenda "1" -- "1" Contato : "Endereco de Entrega"
 PedidoCompra "1" -- "1" Contato : "Endereco de Entrega"
 
+PagamentoProcessamentoService ..> IPagamentoProcessar : "Utiliza para processar"
+PagamentoProcessamentoService ..> IPagamentoValidar : "Utiliza para validar"
+PagamentoProcessamentoService ..> IPagamentoNotificar : "Utiliza para notificar"
+
 Pagamento "1" -- "1" PedidoVenda : "Relacionado a"
 Pagamento "1" -- "1" PedidoCompra : "Relacionado a"
 
-Pagamento ..> IPagamentoProcessar : "Utiliza para processar"
-Pagamento ..> IPagamentoValidar : "Utiliza para validar"
-Pagamento ..> IPagamentoNotificar : "Utiliza para notificar"
+PedidoVenda "1" -- "1" Pagamento : "Relacionado a"
+PedidoCompra "1" -- "1" Pagamento : "Relacionado a"
+
+PagamentoValidarFactory ..> IPagamentoValidar : "Cria"
+PagamentoProcessarFactory ..> IPagamentoProcessar : "Cria"
+PagamentoNotificarFactory ..> IPagamentoNotificar : "Cria"
+
+PagamentoServiceImpl ..> PagamentoService : "Implementa"
+PagamentoServiceImpl ..> PagamentoProcessamentoService : "Usa"
 
 User --> Pessoa : "Composição"
 User "1" --> "0..*" Role : "Tem papéis"

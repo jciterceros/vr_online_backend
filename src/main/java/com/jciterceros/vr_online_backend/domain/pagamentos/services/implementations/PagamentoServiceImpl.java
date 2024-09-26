@@ -27,14 +27,13 @@ public class PagamentoServiceImpl implements PagamentoService {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     Validator validator = factory.getValidator();
     private final PagamentoRepository pagamentoRepository;
+    private final PagamentoProcessamentoService pagamentoProcessamentoService;
 
     @Autowired
-    private PagamentoProcessamentoService pagamentoProcessamentoService;
-
-    @Autowired
-    public PagamentoServiceImpl(ModelMapper mapper, PagamentoRepository pagamentoRepository) {
+    public PagamentoServiceImpl(ModelMapper mapper, PagamentoRepository pagamentoRepository, PagamentoProcessamentoService pagamentoProcessamentoService) {
         this.mapper = mapper;
         this.pagamentoRepository = pagamentoRepository;
+        this.pagamentoProcessamentoService = pagamentoProcessamentoService;
         configureMapper();
     }
 
@@ -70,7 +69,6 @@ public class PagamentoServiceImpl implements PagamentoService {
 
         Pagamento pagamento = mapper.map(pagamentoDTO, Pagamento.class);
 
-        // Processa o pagamento
         pagamentoProcessamentoService.processarPagamento(pagamento);
 
         try {
@@ -93,6 +91,7 @@ public class PagamentoServiceImpl implements PagamentoService {
         }
 
         Pagamento pagamento = mapper.map(pagamentoDTO, Pagamento.class);
+        pagamentoProcessamentoService.processarPagamento(pagamento);
         pagamento.setId(id);
 
         try {
@@ -114,13 +113,10 @@ public class PagamentoServiceImpl implements PagamentoService {
 
     @Override
     public void processarPagamento(PagamentoDTO pagamentoDTO) {
-        // Converte o DTO para a entidade Pagamento
         Pagamento pagamento = mapper.map(pagamentoDTO, Pagamento.class);
 
-        // Processa o pagamento
         pagamentoProcessamentoService.processarPagamento(pagamento);
     }
-
 
     public void configureMapper() {
         mapper.addMappings(new PropertyMap<PagamentoDTO, Pagamento>() {

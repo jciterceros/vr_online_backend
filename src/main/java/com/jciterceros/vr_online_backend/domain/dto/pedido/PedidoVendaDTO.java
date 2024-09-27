@@ -27,7 +27,6 @@ public class PedidoVendaDTO {
     private String cpfNota;
 
     private List<ItemPedidoDTO> itens;
-//    private List<Long> itensIds;
 
     private BigDecimal valorTotal;
 

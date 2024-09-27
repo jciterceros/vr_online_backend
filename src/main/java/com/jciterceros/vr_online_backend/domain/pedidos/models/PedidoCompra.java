@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -29,7 +30,7 @@ public class PedidoCompra {
     private Pessoa fornecedor;
 
     @OneToMany(mappedBy = "pedidoCompra", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ItemPedido> itens;
+    private List<ItemPedido> itens = new ArrayList<>();
 
     private BigDecimal valorTotal;
     private LocalDate dataPedido;
@@ -43,4 +44,10 @@ public class PedidoCompra {
     @ManyToOne
     @JoinColumn(name = "local_entrega_id")
     private Endereco localEntrega;
+
+    public BigDecimal calcularValorTotal() {
+        return itens.stream()
+                .map(ItemPedido::getSubTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

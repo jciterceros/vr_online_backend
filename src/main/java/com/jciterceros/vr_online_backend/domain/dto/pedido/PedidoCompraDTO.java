@@ -1,5 +1,9 @@
 package com.jciterceros.vr_online_backend.domain.dto.pedido;
 
+import com.jciterceros.vr_online_backend.domain.dto.endereco.EnderecoDTO;
+import com.jciterceros.vr_online_backend.domain.dto.pagamento.PagamentoDTO;
+import com.jciterceros.vr_online_backend.domain.dto.pessoa.PessoaDTO;
+import com.jciterceros.vr_online_backend.domain.pagamentos.models.enums.TipoPagamento;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,23 +19,25 @@ import java.util.List;
 public class PedidoCompraDTO {
     private Long id;
 
-    @NotNull(message = "Comprador é obrigatório")
-    private Long compradorId;
+    private PessoaDTO comprador;
 
-    @NotNull(message = "Fornecedor é obrigatório")
-    private Long fornecedorId;
+    private PessoaDTO fornecedor;
 
-    private List<Long> itensIds;
+    private List<ItemPedidoDTO> itens;
 
     private BigDecimal valorTotal;
 
     private LocalDate dataPedido;
 
-    @NotNull(message = "Pagamento é obrigatório")
-    private Long pagamentoId;
+    @NotNull(message = "Tipo de pagamento é obrigatório")
+    private TipoPagamento tipoPagamento;
+
+    private PagamentoDTO pagamento;
 
     private LocalDate dataEntrega;
 
     @NotNull(message = "Local de entrega é obrigatório")
     private Long localEntregaId;
+
+    private EnderecoDTO localEntrega;
 }

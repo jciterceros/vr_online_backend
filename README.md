@@ -2,8 +2,8 @@
 - [Breve passeio pelo diagrama de classes do Sistema](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-56-55%20Diagrama%20de%20Classes.mkv)
 
 <p align="center">
-    <a href="https://github.com/jciterceros/vr_online_backend/docs" target="blank">
-        <img src="https://github.com/jciterceros/vr_online_backend/blob/68254277acb704d77a31320fb86c0e6ae7b99535/docs/Diagrama%20das%20classes.png" width="200" alt="Diagrama de Classes" />
+    <a href="https://github.com/jciterceros/vr_online_backend/blob/b1c2d6a24ea663d9ca263dc598e0997012c6f8fe/docs/Diagrama%20das%20classes.png" target="blank">
+        <img src="https://github.com/jciterceros/vr_online_backend/blob/68254277acb704d77a31320fb86c0e6ae7b99535/docs/Diagrama%20das%20classes.png" width="600" alt="Diagrama de Classes" />
     </a>
 </p>
 

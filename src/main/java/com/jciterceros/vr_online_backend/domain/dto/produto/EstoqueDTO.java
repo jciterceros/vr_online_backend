@@ -18,7 +18,7 @@ public class EstoqueDTO {
     private Long id;
 
     @NotNull(message = "Quantidade é obrigatória")
-    @Size(min = 1, message = "Quantidade deve ser maior que 0")
+//    @Size(min = 1, message = "Quantidade deve ser maior que 0")
     private BigDecimal quantidade;
 
     @NotNull(message = "Métrica é obrigatória")

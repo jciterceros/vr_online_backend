@@ -246,6 +246,7 @@ public class PedidoVendaServiceImpl implements PedidoVendaService {
             @Override
             protected void configure() {
                 skip(destination.getId());
+                map().getLocalEntrega().setId(source.getLocalEntregaId());
             }
         });
     }

@@ -1,5 +1,5 @@
 # API Rest em Java Spring Boot - Projeto Integrador Loja Online
-- [Breve passeio pelo diagrama de classes do Sistema](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-56-55%20Diagrama%20de%20Classes.mkv)
+- [Breve passeio pelo diagrama de classes do Sistema](https://www.youtube.com/watch?v=qANr19hL2bA)
 
 <p align="center">
     <a href="https://github.com/jciterceros/vr_online_backend/blob/b1c2d6a24ea663d9ca263dc598e0997012c6f8fe/docs/Diagrama%20das%20classes.png" target="blank">
@@ -195,23 +195,23 @@ Este documento define os termos e conceitos centrais usados no sistema, represen
 
 ## Links para acessar os videos da API
 
-- [Consultar Produtos](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2012-32-02%20Produtos.mkv)
-- [Consulta ViaCEP](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2012-40-37%20ViaCEP.mkv)
-- [Consultar Estados](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2012-42-42%20Estados.mkv)
-- [Consulta Municípios](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2012-45-53%20Municipios.mkv)
-- [Consulta Endereços](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2012-50-43%20Enderecos.mkv)
-- [Consulta Telefones](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2012-52-20%20Telefones.mkv)
-- [Consulta Estoques](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2012-59-01%20Estoques.mkv)
-- [Consulta Locais de Armazenamento](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-09-22%20Local%20Armazenamento.mkv)
-- [Consulta de Pessoas](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-23-42%20Pessoas.mkv)
-- [Consulta Contatos](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-28-32%20Contatos.mkv)
-- [Consulta Pagamentos](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-32-51%20Pagamentos.mkv)
-- [Consulta Itens do Pedido](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-37-05%20Itens%20Pedido.mkv)
-- [Consulta Pedido de Vendas](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-41-41%20Pedido%20Vendas.mkv)
-- [Consulta Pedido de Compras](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-47-29%20Pedido%20Compras.mkv)
-- [Breve passeio pelo diagrama de classes do Sistema](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2013-56-55%20Diagrama%20de%20Classes.mkv)
-- [Breve passeio pelo diagrama de classes feito em PlantUML](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2014-02-03%20Diagrama%20de%20Classes%20VSCode.mkv)
-- [Breve passeio pela estrutura do código](https://github.com/jciterceros/vr_online_backend/blob/main/docs/videos/2024-09-28%2014-03-56%20Estrutura%20no%20IntelliJ.mkv)
+- [Consultar Produtos](https://www.youtube.com/watch?v=9PoCP40XCq8)
+- [Consulta ViaCEP](https://www.youtube.com/watch?v=QYFjijHqg5U)
+- [Consultar Estados](https://www.youtube.com/watch?v=30gU4RHSIr0)
+- [Consulta Municípios](https://www.youtube.com/watch?v=Y8N6Sn3qMOI)
+- [Consulta Endereços](https://www.youtube.com/watch?v=mPZU6X-s0Ds)
+- [Consulta Telefones](https://www.youtube.com/watch?v=TNfYPc1XDpM)
+- [Consulta Estoques](https://www.youtube.com/watch?v=S46Higu1K_k)
+- [Consulta Locais de Armazenamento](https://www.youtube.com/watch?v=GkRiLY3ZXoQ)
+- [Consulta de Pessoas](https://www.youtube.com/watch?v=-FuiOg8M0YQ)
+- [Consulta Contatos](https://www.youtube.com/watch?v=Abq6BanjPoA)
+- [Consulta Pagamentos](https://www.youtube.com/watch?v=RQAUCqqM4do)
+- [Consulta Itens do Pedido](https://www.youtube.com/watch?v=Xm3gtodT-sc)
+- [Consulta Pedido de Vendas](https://www.youtube.com/watch?v=dxSzjHF_JAw)
+- [Consulta Pedido de Compras](https://www.youtube.com/watch?v=fc7uysx6byw)
+- [Breve passeio pelo diagrama de classes do Sistema](https://www.youtube.com/watch?v=qANr19hL2bA)
+- [Breve passeio pelo diagrama de classes feito em PlantUML](https://www.youtube.com/watch?v=taJpe8gLRJs)
+- [Breve passeio pela estrutura do código](https://www.youtube.com/watch?v=CNFDyBa3NrQ)
 
 
 ## Contribuição
